@@ -3,7 +3,7 @@
 			<ProjectGuid>{F4E6474E-DB0A-469D-A34A-3C5EA30614F9}</ProjectGuid>
 		</PropertyGroup>
 		<ItemGroup>
-			<Projects Include="JPGIMG\pasjpeg.dproj">
+			<Projects Include="pasjpeg\pasjpeg.dproj">
 				<Dependencies/>
 			</Projects>
 			<Projects Include="bgrabitmappack.dproj">
@@ -69,175 +69,175 @@
 			</BorlandProject>
 		</ProjectExtensions>
 		<Target Name="pasjpeg">
-			<MSBuild Projects="JPGIMG\pasjpeg.dproj"/>
+			<MSBuild Projects="pasjpeg\pasjpeg.dproj"/>
 		</Target>
 		<Target Name="pasjpeg:Clean">
-			<MSBuild Projects="JPGIMG\pasjpeg.dproj" Targets="Clean"/>
+			<MSBuild Targets="Clean" Projects="pasjpeg\pasjpeg.dproj"/>
 		</Target>
 		<Target Name="pasjpeg:Make">
-			<MSBuild Projects="JPGIMG\pasjpeg.dproj" Targets="Make"/>
+			<MSBuild Targets="Make" Projects="pasjpeg\pasjpeg.dproj"/>
 		</Target>
 		<Target Name="bgrabitmappack">
 			<MSBuild Projects="bgrabitmappack.dproj"/>
 		</Target>
 		<Target Name="bgrabitmappack:Clean">
-			<MSBuild Projects="bgrabitmappack.dproj" Targets="Clean"/>
+			<MSBuild Targets="Clean" Projects="bgrabitmappack.dproj"/>
 		</Target>
 		<Target Name="bgrabitmappack:Make">
-			<MSBuild Projects="bgrabitmappack.dproj" Targets="Make"/>
+			<MSBuild Targets="Make" Projects="bgrabitmappack.dproj"/>
 		</Target>
 		<Target Name="bgracontrols">
 			<MSBuild Projects="bgracontrols-master\bgracontrols.dproj"/>
 		</Target>
 		<Target Name="bgracontrols:Clean">
-			<MSBuild Projects="bgracontrols-master\bgracontrols.dproj" Targets="Clean"/>
+			<MSBuild Targets="Clean" Projects="bgracontrols-master\bgracontrols.dproj"/>
 		</Target>
 		<Target Name="bgracontrols:Make">
-			<MSBuild Projects="bgracontrols-master\bgracontrols.dproj" Targets="Make"/>
+			<MSBuild Targets="Make" Projects="bgracontrols-master\bgracontrols.dproj"/>
 		</Target>
 		<Target Name="Project1">
 			<MSBuild Projects="delphi_Tests\colorspace\Project1.dproj"/>
 		</Target>
 		<Target Name="Project1:Clean">
-			<MSBuild Projects="delphi_Tests\colorspace\Project1.dproj" Targets="Clean"/>
+			<MSBuild Targets="Clean" Projects="delphi_Tests\colorspace\Project1.dproj"/>
 		</Target>
 		<Target Name="Project1:Make">
-			<MSBuild Projects="delphi_Tests\colorspace\Project1.dproj" Targets="Make"/>
+			<MSBuild Targets="Make" Projects="delphi_Tests\colorspace\Project1.dproj"/>
 		</Target>
 		<Target Name="Project11">
 			<MSBuild Projects="delphi_Tests\testgif\Project11.dproj"/>
 		</Target>
 		<Target Name="Project11:Clean">
-			<MSBuild Projects="delphi_Tests\testgif\Project11.dproj" Targets="Clean"/>
+			<MSBuild Targets="Clean" Projects="delphi_Tests\testgif\Project11.dproj"/>
 		</Target>
 		<Target Name="Project11:Make">
-			<MSBuild Projects="delphi_Tests\testgif\Project11.dproj" Targets="Make"/>
+			<MSBuild Targets="Make" Projects="delphi_Tests\testgif\Project11.dproj"/>
 		</Target>
 		<Target Name="bccontrols">
 			<MSBuild Projects="delphi_Tests\Nova pasta\bccontrols.dproj"/>
 		</Target>
 		<Target Name="bccontrols:Clean">
-			<MSBuild Projects="delphi_Tests\Nova pasta\bccontrols.dproj" Targets="Clean"/>
+			<MSBuild Targets="Clean" Projects="delphi_Tests\Nova pasta\bccontrols.dproj"/>
 		</Target>
 		<Target Name="bccontrols:Make">
-			<MSBuild Projects="delphi_Tests\Nova pasta\bccontrols.dproj" Targets="Make"/>
+			<MSBuild Targets="Make" Projects="delphi_Tests\Nova pasta\bccontrols.dproj"/>
 		</Target>
 		<Target Name="viewer">
 			<MSBuild Projects="delphi_Tests\svg_viewer\viewer.dproj"/>
 		</Target>
 		<Target Name="viewer:Clean">
-			<MSBuild Projects="delphi_Tests\svg_viewer\viewer.dproj" Targets="Clean"/>
+			<MSBuild Targets="Clean" Projects="delphi_Tests\svg_viewer\viewer.dproj"/>
 		</Target>
 		<Target Name="viewer:Make">
-			<MSBuild Projects="delphi_Tests\svg_viewer\viewer.dproj" Targets="Make"/>
+			<MSBuild Targets="Make" Projects="delphi_Tests\svg_viewer\viewer.dproj"/>
 		</Target>
 		<Target Name="test_svg">
 			<MSBuild Projects="delphi_Tests\test_bcsvg\test_svg.dproj"/>
 		</Target>
 		<Target Name="test_svg:Clean">
-			<MSBuild Projects="delphi_Tests\test_bcsvg\test_svg.dproj" Targets="Clean"/>
+			<MSBuild Targets="Clean" Projects="delphi_Tests\test_bcsvg\test_svg.dproj"/>
 		</Target>
 		<Target Name="test_svg:Make">
-			<MSBuild Projects="delphi_Tests\test_bcsvg\test_svg.dproj" Targets="Make"/>
+			<MSBuild Targets="Make" Projects="delphi_Tests\test_bcsvg\test_svg.dproj"/>
 		</Target>
 		<Target Name="bcsvgabuttontest1">
 			<MSBuild Projects="delphi_Tests\test_bcsvgbutton\bcsvgabuttontest1.dproj"/>
 		</Target>
 		<Target Name="bcsvgabuttontest1:Clean">
-			<MSBuild Projects="delphi_Tests\test_bcsvgbutton\bcsvgabuttontest1.dproj" Targets="Clean"/>
+			<MSBuild Targets="Clean" Projects="delphi_Tests\test_bcsvgbutton\bcsvgabuttontest1.dproj"/>
 		</Target>
 		<Target Name="bcsvgabuttontest1:Make">
-			<MSBuild Projects="delphi_Tests\test_bcsvgbutton\bcsvgabuttontest1.dproj" Targets="Make"/>
+			<MSBuild Targets="Make" Projects="delphi_Tests\test_bcsvgbutton\bcsvgabuttontest1.dproj"/>
 		</Target>
 		<Target Name="BGRA_Ribbon">
 			<MSBuild Projects="delphi_Tests\BGRA Ribbon Custom\BGRA_Ribbon.dproj"/>
 		</Target>
 		<Target Name="BGRA_Ribbon:Clean">
-			<MSBuild Projects="delphi_Tests\BGRA Ribbon Custom\BGRA_Ribbon.dproj" Targets="Clean"/>
+			<MSBuild Targets="Clean" Projects="delphi_Tests\BGRA Ribbon Custom\BGRA_Ribbon.dproj"/>
 		</Target>
 		<Target Name="BGRA_Ribbon:Make">
-			<MSBuild Projects="delphi_Tests\BGRA Ribbon Custom\BGRA_Ribbon.dproj" Targets="Make"/>
+			<MSBuild Targets="Make" Projects="delphi_Tests\BGRA Ribbon Custom\BGRA_Ribbon.dproj"/>
 		</Target>
 		<Target Name="test_bcxbutton">
 			<MSBuild Projects="delphi_Tests\test_bcxbutton\test_bcxbutton.dproj"/>
 		</Target>
 		<Target Name="test_bcxbutton:Clean">
-			<MSBuild Projects="delphi_Tests\test_bcxbutton\test_bcxbutton.dproj" Targets="Clean"/>
+			<MSBuild Targets="Clean" Projects="delphi_Tests\test_bcxbutton\test_bcxbutton.dproj"/>
 		</Target>
 		<Target Name="test_bcxbutton:Make">
-			<MSBuild Projects="delphi_Tests\test_bcxbutton\test_bcxbutton.dproj" Targets="Make"/>
+			<MSBuild Targets="Make" Projects="delphi_Tests\test_bcxbutton\test_bcxbutton.dproj"/>
 		</Target>
 		<Target Name="bcsample">
 			<MSBuild Projects="delphi_Tests\test_bcbutton\bcsample.dproj"/>
 		</Target>
 		<Target Name="bcsample:Clean">
-			<MSBuild Projects="delphi_Tests\test_bcbutton\bcsample.dproj" Targets="Clean"/>
+			<MSBuild Targets="Clean" Projects="delphi_Tests\test_bcbutton\bcsample.dproj"/>
 		</Target>
 		<Target Name="bcsample:Make">
-			<MSBuild Projects="delphi_Tests\test_bcbutton\bcsample.dproj" Targets="Make"/>
+			<MSBuild Targets="Make" Projects="delphi_Tests\test_bcbutton\bcsample.dproj"/>
 		</Target>
 		<Target Name="test">
 			<MSBuild Projects="delphi_Tests\test_bcbuttonfocus\test.dproj"/>
 		</Target>
 		<Target Name="test:Clean">
-			<MSBuild Projects="delphi_Tests\test_bcbuttonfocus\test.dproj" Targets="Clean"/>
+			<MSBuild Targets="Clean" Projects="delphi_Tests\test_bcbuttonfocus\test.dproj"/>
 		</Target>
 		<Target Name="test:Make">
-			<MSBuild Projects="delphi_Tests\test_bcbuttonfocus\test.dproj" Targets="Make"/>
+			<MSBuild Targets="Make" Projects="delphi_Tests\test_bcbuttonfocus\test.dproj"/>
 		</Target>
 		<Target Name="test_bcfilters">
 			<MSBuild Projects="delphi_Tests\test_bcfilters\test_bcfilters.dproj"/>
 		</Target>
 		<Target Name="test_bcfilters:Clean">
-			<MSBuild Projects="delphi_Tests\test_bcfilters\test_bcfilters.dproj" Targets="Clean"/>
+			<MSBuild Targets="Clean" Projects="delphi_Tests\test_bcfilters\test_bcfilters.dproj"/>
 		</Target>
 		<Target Name="test_bcfilters:Make">
-			<MSBuild Projects="delphi_Tests\test_bcfilters\test_bcfilters.dproj" Targets="Make"/>
+			<MSBuild Targets="Make" Projects="delphi_Tests\test_bcfilters\test_bcfilters.dproj"/>
 		</Target>
 		<Target Name="ptestupdown">
 			<MSBuild Projects="delphi_Tests\test_bctrackbarupdown\ptestupdown.dproj"/>
 		</Target>
 		<Target Name="ptestupdown:Clean">
-			<MSBuild Projects="delphi_Tests\test_bctrackbarupdown\ptestupdown.dproj" Targets="Clean"/>
+			<MSBuild Targets="Clean" Projects="delphi_Tests\test_bctrackbarupdown\ptestupdown.dproj"/>
 		</Target>
 		<Target Name="ptestupdown:Make">
-			<MSBuild Projects="delphi_Tests\test_bctrackbarupdown\ptestupdown.dproj" Targets="Make"/>
+			<MSBuild Targets="Make" Projects="delphi_Tests\test_bctrackbarupdown\ptestupdown.dproj"/>
 		</Target>
 		<Target Name="button">
 			<MSBuild Projects="delphi_Tests\test_bcimagebutton\button.dproj"/>
 		</Target>
 		<Target Name="button:Clean">
-			<MSBuild Projects="delphi_Tests\test_bcimagebutton\button.dproj" Targets="Clean"/>
+			<MSBuild Targets="Clean" Projects="delphi_Tests\test_bcimagebutton\button.dproj"/>
 		</Target>
 		<Target Name="button:Make">
-			<MSBuild Projects="delphi_Tests\test_bcimagebutton\button.dproj" Targets="Make"/>
+			<MSBuild Targets="Make" Projects="delphi_Tests\test_bcimagebutton\button.dproj"/>
 		</Target>
 		<Target Name="test_drawing">
 			<MSBuild Projects="delphi_Tests\test_bcimagebutton_3dbutton\test_drawing.dproj"/>
 		</Target>
 		<Target Name="test_drawing:Clean">
-			<MSBuild Projects="delphi_Tests\test_bcimagebutton_3dbutton\test_drawing.dproj" Targets="Clean"/>
+			<MSBuild Targets="Clean" Projects="delphi_Tests\test_bcimagebutton_3dbutton\test_drawing.dproj"/>
 		</Target>
 		<Target Name="test_drawing:Make">
-			<MSBuild Projects="delphi_Tests\test_bcimagebutton_3dbutton\test_drawing.dproj" Targets="Make"/>
+			<MSBuild Targets="Make" Projects="delphi_Tests\test_bcimagebutton_3dbutton\test_drawing.dproj"/>
 		</Target>
 		<Target Name="bctest">
 			<MSBuild Projects="delphi_Tests\test_bccontrols\bctest.dproj"/>
 		</Target>
 		<Target Name="bctest:Clean">
-			<MSBuild Projects="delphi_Tests\test_bccontrols\bctest.dproj" Targets="Clean"/>
+			<MSBuild Targets="Clean" Projects="delphi_Tests\test_bccontrols\bctest.dproj"/>
 		</Target>
 		<Target Name="bctest:Make">
-			<MSBuild Projects="delphi_Tests\test_bccontrols\bctest.dproj" Targets="Make"/>
+			<MSBuild Targets="Make" Projects="delphi_Tests\test_bccontrols\bctest.dproj"/>
 		</Target>
 		<Target Name="test_bcbuttonmacos_style">
 			<MSBuild Projects="delphi_Tests\test_bcbutton_macos_style\test_bcbuttonmacos_style.dproj"/>
 		</Target>
 		<Target Name="test_bcbuttonmacos_style:Clean">
-			<MSBuild Projects="delphi_Tests\test_bcbutton_macos_style\test_bcbuttonmacos_style.dproj" Targets="Clean"/>
+			<MSBuild Targets="Clean" Projects="delphi_Tests\test_bcbutton_macos_style\test_bcbuttonmacos_style.dproj"/>
 		</Target>
 		<Target Name="test_bcbuttonmacos_style:Make">
-			<MSBuild Projects="delphi_Tests\test_bcbutton_macos_style\test_bcbuttonmacos_style.dproj" Targets="Make"/>
+			<MSBuild Targets="Make" Projects="delphi_Tests\test_bcbutton_macos_style\test_bcbuttonmacos_style.dproj"/>
 		</Target>
 		<Target Name="Build">
 			<CallTarget Targets="pasjpeg;bgrabitmappack;bgracontrols;Project1;Project11;bccontrols;viewer;test_svg;bcsvgabuttontest1;BGRA_Ribbon;test_bcxbutton;bcsample;test;test_bcfilters;ptestupdown;button;test_drawing;bctest;test_bcbuttonmacos_style"/>
