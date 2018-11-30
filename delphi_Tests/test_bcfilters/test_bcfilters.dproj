@@ -1,0 +1,149 @@
+﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<ProjectGuid>{36AB6D5C-BFA3-4F63-86BD-EA0D11A0F263}</ProjectGuid>
+			<ProjectVersion>13.4</ProjectVersion>
+			<FrameworkType>VCL</FrameworkType>
+			<MainSource>test_bcfilters.dpr</MainSource>
+			<Base>True</Base>
+			<Config Condition="'$(Config)'==''">Debug</Config>
+			<Platform Condition="'$(Platform)'==''">Win32</Platform>
+			<TargetedPlatforms>1</TargetedPlatforms>
+			<AppType>Application</AppType>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Base)'=='true') or '$(Base_Win64)'!=''">
+			<Base_Win64>true</Base_Win64>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
+			<Base_Win32>true</Base_Win32>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_1)'!=''">
+			<Cfg_1>true</Cfg_1>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_1)'=='true') or '$(Cfg_1_Win32)'!=''">
+			<Cfg_1_Win32>true</Cfg_1_Win32>
+			<CfgParent>Cfg_1</CfgParent>
+			<Cfg_1>true</Cfg_1>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_2)'!=''">
+			<Cfg_2>true</Cfg_2>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Base)'!=''">
+			<DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
+			<Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
+			<DCC_UsePackage>AnyDAC_PhysADS_D16;AnyDAC_Comp_D16;fmx;AnyDAC_PhysPg_D16;AnyDAC_Phys_D16;AnyDAC_PhysDb2_D16;DBXInterBaseDriver;DataSnapServer;DataSnapCommon;AnyDAC_PhysMSSQL_D16;DataSnapClient;DbxCommonDriver;DataSnapProviderClient;dbxcds;AnyDAC_PhysTDBX_D16;DBXOracleDriver;CustomIPTransport;dsnap;fmxase;AnyDAC_PhysSQLITE_D16;AnyDAC_PhysOracle_D16;AnyDAC_PhysMySQL_D16;inetdbxpress;AnyDAC_PhysODBC_D16;bindcompfmx;rtl;dbrtl;DbxClientDriver;bindcomp;inetdb;AnyDAC_PhysASA_D16;xmlrtl;ibxpress;DBXMySQLDriver;bindengine;soaprtl;DBXInformixDriver;AnyDAC_ComI_D16;DBXFirebirdDriver;inet;fmxobj;AnyDAC_PhysIB_D16;AnyDAC_PhysMSAcc_D16;DBXSybaseASADriver;fmxdae;AnyDAC_GUIxForms_D16;dbexpress;DataSnapIndy10ServerTransport;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
+			<DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Base_Win64)'!=''">
+			<DCC_UsePackage>DBXSybaseASEDriver;vclimg;vcldb;vcldsnap;DBXDb2Driver;vcl;DBXMSSQLDriver;webdsnap;adortl;Tee;DBXOdbcDriver;vclactnband;TeeUI;bindcompvcl;vclie;vcltouch;websnap;VclSmp;dsnapcon;vclx;$(DCC_UsePackage)</DCC_UsePackage>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Base_Win32)'!=''">
+			<DCC_UsePackage>ACBr_Convenio115;dclRBADO1416;ACBr_BoletoFR;ZComponent;ACBr_BoletoRL;dclRBIBE1416;ACBr_GNRE;ACBr_Diversos;IndySystem;TeeDB;ACBr_NFeDanfeFR;inetdbbde;Rave100VCL;ACBr_NFeDanfeESCPOS;rbRAP1416;ACBre_Social;rbRCL1416;ACBr_synapse;ACBr_BlocoX;vclib;DBXSybaseASEDriver;vclimg;fmi;RtmRxCtl160;ACBr_Comum;ACBr_NFSeDanfseFR;vcldb;vcldsnap;rbUSER1416;ACBr_MDFeDamdfeRL;HFPlanIt;ACBr_SATExtratoESCPOS;DBXDb2Driver;Intraweb_120_160;frce;TBX_DXE2;dclRBBDE1416;ACBr_Serial;frxe16;rbCIDE1416;ACBr_SPED;ACBr_MDFe;IndyCore;vcl;rbTCUI1416;ACBr_DFeComum;RtmRxDB160;DBXMSSQLDriver;CloudService;FmxTeeUI;CodeSiteExpressPkg;ACBr_NFSeDanfseRL;Package1;dclRBE1416;ACBr_Boleto;ACBr_Sintegra;ACBr_SAT;ACBr_GNREGuiaRL;ACBr_CTeDacteFR;webdsnap;ACBr_NFSe;vclribbon;rbRIDE1416;rbDAD1416;ACBr_LFD;ACBr_Ponto;ACBR_DeSTDA;ACBr_PCNComum;pHelpFor_Components;adortl;ACBr_TCP;rbUSERDesign1416;ACBr_SEF2;ACBr_PAF;vcldbx;dclRBDBE1416;frx16;ZDbc;ZPlain;ACBr_MTER;Tee;ACBr_NFe;DBXOdbcDriver;rbDBDE1416;ACBr_CTe;ACBr_ANe;ACBr_NFCeECFVirtual;rbTC1416;svnui;ACBr_NFeDanfeRL;IndyProtocols;intrawebdb_120_160;frxDB16;fs16;vclactnband;FMXTee;TeeUI;ACBr_CTeDacteRL;bindcompvcl;ACBr_BPe;vclie;rbIDE1416;rbADO1416;ACBr_OpenSSL;ZCore;rbBDE1416;ACBr_TEFD;ACBr_Integrador;ACBr_Reinf;vcltouch;websnap;ACBr_SATWS;VclSmp;fsDB16;rbDB1416;rbDBE1416;ZipMasterR;ACBr_SATExtratoRL;DataSnapConnectors;ACBr_SATECFVirtual;dsnapcon;ACBr_TXTComum;rbIBE1416;vclx;ACBr_SPEDImportar;ZParseSql;svn;bdertl;tdbf_xe4_d;$(DCC_UsePackage)</DCC_UsePackage>
+			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+			<DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
+			<VerInfo_Locale>1033</VerInfo_Locale>
+			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_1)'!=''">
+			<DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
+			<DCC_Optimize>false</DCC_Optimize>
+			<DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
+			<DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
+			<DCC_RemoteDebug>true</DCC_RemoteDebug>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+			<DCC_UnitSearchPath>D:\LAZARUS\bgrabitmap-9.9\bgrabitmap-9.9\bgrabitmap;D:\LAZARUS\bgrabitmap-9.9\bgrabitmap-9.9\bgrabitmap\Win32\Debug;D:\LAZARUS\bgrabitmap-9.9\bgrabitmap-9.9\bgrabitmap\bgracontrols-master;D:\LAZARUS\bgrabitmap-9.9\bgrabitmap-9.9\bgrabitmap\bgracontrols-master\Win32\Debug;D:\LAZARUS\bgrabitmap-9.9\bgrabitmap-9.9\bgrabitmap\JPGIMG\Win32\Debug;D:\LAZARUS\bgrabitmap-9.9\bgrabitmap-9.9\bgrabitmap\JPGIMG;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+			<VerInfo_Locale>1033</VerInfo_Locale>
+			<DCC_ExeOutput>D:\LAZARUS\bgrabitmap-9.9\bgrabitmap-9.9\bgrabitmap\delphi_Tests\test_bcfilters\</DCC_ExeOutput>
+			<DCC_RemoteDebug>false</DCC_RemoteDebug>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_2)'!=''">
+			<DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
+			<DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
+			<DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+			<DCC_DebugInformation>false</DCC_DebugInformation>
+		</PropertyGroup>
+		<ItemGroup>
+			<DelphiCompile Include="$(MainSource)">
+				<MainSource>MainSource</MainSource>
+			</DelphiCompile>
+			<DCCReference Include="unit1.pas">
+				<Form>Form1</Form>
+			</DCCReference>
+			<BuildConfiguration Include="Release">
+				<Key>Cfg_2</Key>
+				<CfgParent>Base</CfgParent>
+			</BuildConfiguration>
+			<BuildConfiguration Include="Base">
+				<Key>Base</Key>
+			</BuildConfiguration>
+			<BuildConfiguration Include="Debug">
+				<Key>Cfg_1</Key>
+				<CfgParent>Base</CfgParent>
+			</BuildConfiguration>
+		</ItemGroup>
+		<ProjectExtensions>
+			<Borland.Personality>Delphi.Personality.12</Borland.Personality>
+			<Borland.ProjectType/>
+			<BorlandProject>
+				<Delphi.Personality>
+					<VersionInfo>
+						<VersionInfo Name="IncludeVerInfo">False</VersionInfo>
+						<VersionInfo Name="AutoIncBuild">False</VersionInfo>
+						<VersionInfo Name="MajorVer">1</VersionInfo>
+						<VersionInfo Name="MinorVer">0</VersionInfo>
+						<VersionInfo Name="Release">0</VersionInfo>
+						<VersionInfo Name="Build">0</VersionInfo>
+						<VersionInfo Name="Debug">False</VersionInfo>
+						<VersionInfo Name="PreRelease">False</VersionInfo>
+						<VersionInfo Name="Special">False</VersionInfo>
+						<VersionInfo Name="Private">False</VersionInfo>
+						<VersionInfo Name="DLL">False</VersionInfo>
+						<VersionInfo Name="Locale">1046</VersionInfo>
+						<VersionInfo Name="CodePage">1252</VersionInfo>
+					</VersionInfo>
+					<VersionInfoKeys>
+						<VersionInfoKeys Name="CompanyName"/>
+						<VersionInfoKeys Name="FileDescription"/>
+						<VersionInfoKeys Name="FileVersion">1.0.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="InternalName"/>
+						<VersionInfoKeys Name="LegalCopyright"/>
+						<VersionInfoKeys Name="LegalTrademarks"/>
+						<VersionInfoKeys Name="OriginalFilename"/>
+						<VersionInfoKeys Name="ProductName"/>
+						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="Comments"/>
+					</VersionInfoKeys>
+					<Excluded_Packages>
+						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\RtmRxDB160.bpl">RX Library DB Component Package</Excluded_Packages>
+						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\RtmRxCtl160.bpl">RX Library Component and Tools Package</Excluded_Packages>
+					</Excluded_Packages>
+					<Source>
+						<Source Name="MainSource">test_bcfilters.dpr</Source>
+					</Source>
+				</Delphi.Personality>
+				<Deployment/>
+				<Platforms>
+					<Platform value="Win64">False</Platform>
+					<Platform value="Win32">True</Platform>
+				</Platforms>
+			</BorlandProject>
+			<ProjectFileVersion>12</ProjectFileVersion>
+		</ProjectExtensions>
+		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')" Project="$(BDS)\Bin\CodeGear.Delphi.Targets"/>
+		<Import Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')" Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj"/>
+	</Project>

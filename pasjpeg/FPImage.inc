@@ -1,0 +1,15 @@
+  {$extendedsyntax on}
+  {$writeableconst on}
+  {.$varstringchecks on}
+  {.$typedaddress off}
+  {.$overflowchecks off}
+  {$rangechecks off}
+  {.$realcompatibility off}
+  {.$openstrings on}
+  {$longstrings on}
+  {.$booleval off}
+  {.$safedivide off}
+  {.$optimization on}
+  {.$finitefloat off}
+  {$EXCESSPRECISION OFF}
+  {$POINTERMATH ON}

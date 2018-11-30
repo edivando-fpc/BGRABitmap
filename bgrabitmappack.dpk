@@ -1,0 +1,104 @@
+package bgrabitmappack;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$RUNONLY}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  vclimg,
+  vcl,
+  xmlrtl,
+  pasjpeg;
+
+contains
+  bgrablurgl in 'bgrablurgl.pas',
+  bgracanvasgl in 'bgracanvasgl.pas',
+  bgracolorint in 'bgracolorint.pas',
+  bgracolorquantization in 'bgracolorquantization.pas',
+  bgracompressablebitmap in 'bgracompressablebitmap.pas',
+  bgracoordpool3d in 'bgracoordpool3d.pas',
+  bgradnetdeserial in 'bgradnetdeserial.pas',
+  bgrafontgl in 'bgrafontgl.pas',
+  bgragradientoriginal in 'bgragradientoriginal.pas',
+  bgraiconcursor in 'bgraiconcursor.pas',
+  bgralayeroriginal in 'bgralayeroriginal.pas',
+  bgralayers in 'bgralayers.pas',
+  bgralazresource in 'bgralazresource.pas',
+  bgramatrix3d in 'bgramatrix3d.pas',
+  bgramemdirectory in 'bgramemdirectory.pas',
+  bgraopengl in 'bgraopengl.pas',
+  bgraopengl3d in 'bgraopengl3d.pas',
+  bgraopengltype in 'bgraopengltype.pas',
+  bgraphoxo in 'bgraphoxo.pas',
+  bgrarenderer3d in 'bgrarenderer3d.pas',
+  bgrascene3d in 'bgrascene3d.pas',
+  bgrascenetypes in 'bgrascenetypes.pas',
+  bgraspritegl in 'bgraspritegl.pas',
+  bgrastreamlayers in 'bgrastreamlayers.pas',
+  bgrasvgoriginal in 'bgrasvgoriginal.pas',
+  bgrawinresource in 'bgrawinresource.pas',
+  bgrawritebmpmiomap in 'bgrawritebmpmiomap.pas',
+  bgragraphics in 'bgragraphics.pas',
+  adler in 'lcl\adler.pas',
+  AvgLvlTree in 'lcl\AvgLvlTree.pas',
+  base64 in 'lcl\base64.pas',
+  BMPcomn in 'lcl\BMPcomn.pas',
+  Clipping in 'lcl\Clipping.pas',
+  dynlibs in 'lcl\dynlibs.pas',
+  Ellipses in 'lcl\Ellipses.pas',
+  FPCanvas in 'lcl\FPCanvas.pas',
+  FPImage in 'lcl\FPImage.pas',
+  FPImgCanv in 'lcl\FPImgCanv.pas',
+  FPImgCmn in 'lcl\FPImgCmn.pas',
+  FPReadGif in 'lcl\FPReadGif.pas',
+  FPReadJPEG in 'lcl\FPReadJPEG.pas',
+  FPReadXPM in 'lcl\FPReadXPM.pas',
+  fpreadxwd in 'lcl\fpreadxwd.pas',
+  FPWriteBMP in 'lcl\FPWriteBMP.pas',
+  FPWriteJPEG in 'lcl\FPWriteJPEG.pas',
+  FPWriteXPM in 'lcl\FPWriteXPM.pas',
+  GL in 'lcl\GL.pas',
+  GLext in 'lcl\GLext.pas',
+  glu in 'lcl\glu.pas',
+  GraphType in 'lcl\GraphType.pas',
+  IntfGraphics in 'lcl\IntfGraphics.pas',
+  Laz_AVL_Tree in 'lcl\Laz_AVL_Tree.pas',
+  PixTools in 'lcl\PixTools.pas',
+  pngcomn in 'lcl\pngcomn.pas',
+  Trees in 'lcl\Trees.pas',
+  ZBase in 'lcl\ZBase.pas',
+  ZDeflate in 'lcl\ZDeflate.pas',
+  ZStream in 'lcl\ZStream.pas',
+  bgrareadjpeg in 'bgrareadjpeg.pas',
+  bgraslicescaling in 'bgraslicescaling.pas',
+  bgragradients in 'bgragradients.pas',
+  bgraanimatedgif in 'bgraanimatedgif.pas',
+  BGRABitmapTypes in 'BGRABitmapTypes.pas',
+  bgrabitmap in 'bgrabitmap.pas';
+
+end.

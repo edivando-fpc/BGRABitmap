@@ -1,0 +1,212 @@
+﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<ProjectGuid>{BE1DB33A-E276-43C9-86C2-D3B88AA04EB4}</ProjectGuid>
+			<MainSource>bgrabitmappack.dpk</MainSource>
+			<ProjectVersion>13.4</ProjectVersion>
+			<FrameworkType>VCL</FrameworkType>
+			<Base>True</Base>
+			<Config Condition="'$(Config)'==''">Debug</Config>
+			<Platform Condition="'$(Platform)'==''">Win32</Platform>
+			<TargetedPlatforms>1</TargetedPlatforms>
+			<AppType>Package</AppType>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
+			<Base_Win32>true</Base_Win32>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_1)'!=''">
+			<Cfg_1>true</Cfg_1>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_1)'=='true') or '$(Cfg_1_Win32)'!=''">
+			<Cfg_1_Win32>true</Cfg_1_Win32>
+			<CfgParent>Cfg_1</CfgParent>
+			<Cfg_1>true</Cfg_1>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_2)'!=''">
+			<Cfg_2>true</Cfg_2>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Base)'!=''">
+			<RuntimeOnlyPackage>true</RuntimeOnlyPackage>
+			<DCC_CBuilderOutput>All</DCC_CBuilderOutput>
+			<DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
+			<GenPackage>true</GenPackage>
+			<GenDll>true</GenDll>
+			<DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
+			<DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Base_Win32)'!=''">
+			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+			<DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
+			<VerInfo_Locale>1033</VerInfo_Locale>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_1)'!=''">
+			<DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
+			<DCC_Optimize>false</DCC_Optimize>
+			<DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
+			<DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
+			<DCC_RemoteDebug>true</DCC_RemoteDebug>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+			<DCC_UnitSearchPath>D:\LAZARUS\bgrabitmap-9.9\bgrabitmap-9.9\bgrabitmap\JPGIMG\Win32\Debug;D:\LAZARUS\bgrabitmap-9.9\bgrabitmap-9.9\bgrabitmap\JPGIMG;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+			<DCC_CBuilderOutput>None</DCC_CBuilderOutput>
+			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+			<DCC_Warnings>false</DCC_Warnings>
+			<VerInfo_Locale>1033</VerInfo_Locale>
+			<DCC_Hints>false</DCC_Hints>
+			<DCC_RemoteDebug>false</DCC_RemoteDebug>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_2)'!=''">
+			<DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
+			<DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
+			<DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+			<DCC_DebugInformation>false</DCC_DebugInformation>
+		</PropertyGroup>
+		<ItemGroup>
+			<DelphiCompile Include="$(MainSource)">
+				<MainSource>MainSource</MainSource>
+			</DelphiCompile>
+			<DCCReference Include="rtl.dcp"/>
+			<DCCReference Include="vclimg.dcp"/>
+			<DCCReference Include="vcl.dcp"/>
+			<DCCReference Include="xmlrtl.dcp"/>
+			<DCCReference Include="pasjpeg.dcp"/>
+			<DCCReference Include="bgrablurgl.pas"/>
+			<DCCReference Include="bgracanvasgl.pas"/>
+			<DCCReference Include="bgracolorint.pas"/>
+			<DCCReference Include="bgracolorquantization.pas"/>
+			<DCCReference Include="bgracompressablebitmap.pas"/>
+			<DCCReference Include="bgracoordpool3d.pas"/>
+			<DCCReference Include="bgradnetdeserial.pas"/>
+			<DCCReference Include="bgrafontgl.pas"/>
+			<DCCReference Include="bgragradientoriginal.pas"/>
+			<DCCReference Include="bgraiconcursor.pas"/>
+			<DCCReference Include="bgralayeroriginal.pas"/>
+			<DCCReference Include="bgralayers.pas"/>
+			<DCCReference Include="bgralazresource.pas"/>
+			<DCCReference Include="bgramatrix3d.pas"/>
+			<DCCReference Include="bgramemdirectory.pas"/>
+			<DCCReference Include="bgraopengl.pas"/>
+			<DCCReference Include="bgraopengl3d.pas"/>
+			<DCCReference Include="bgraopengltype.pas"/>
+			<DCCReference Include="bgraphoxo.pas"/>
+			<DCCReference Include="bgrarenderer3d.pas"/>
+			<DCCReference Include="bgrascene3d.pas"/>
+			<DCCReference Include="bgrascenetypes.pas"/>
+			<DCCReference Include="bgraspritegl.pas"/>
+			<DCCReference Include="bgrastreamlayers.pas"/>
+			<DCCReference Include="bgrasvgoriginal.pas"/>
+			<DCCReference Include="bgrawinresource.pas"/>
+			<DCCReference Include="bgrawritebmpmiomap.pas"/>
+			<DCCReference Include="bgragraphics.pas"/>
+			<DCCReference Include="lcl\adler.pas"/>
+			<DCCReference Include="lcl\AvgLvlTree.pas"/>
+			<DCCReference Include="lcl\base64.pas"/>
+			<DCCReference Include="lcl\BMPcomn.pas"/>
+			<DCCReference Include="lcl\Clipping.pas"/>
+			<DCCReference Include="lcl\dynlibs.pas"/>
+			<DCCReference Include="lcl\Ellipses.pas"/>
+			<DCCReference Include="lcl\FPCanvas.pas"/>
+			<DCCReference Include="lcl\FPImage.pas"/>
+			<DCCReference Include="lcl\FPImgCanv.pas"/>
+			<DCCReference Include="lcl\FPImgCmn.pas"/>
+			<DCCReference Include="lcl\FPReadGif.pas"/>
+			<DCCReference Include="lcl\FPReadJPEG.pas"/>
+			<DCCReference Include="lcl\FPReadXPM.pas"/>
+			<DCCReference Include="lcl\fpreadxwd.pas"/>
+			<DCCReference Include="lcl\FPWriteBMP.pas"/>
+			<DCCReference Include="lcl\FPWriteJPEG.pas"/>
+			<DCCReference Include="lcl\FPWriteXPM.pas"/>
+			<DCCReference Include="lcl\GL.pas"/>
+			<DCCReference Include="lcl\GLext.pas"/>
+			<DCCReference Include="lcl\glu.pas"/>
+			<DCCReference Include="lcl\GraphType.pas"/>
+			<DCCReference Include="lcl\IntfGraphics.pas"/>
+			<DCCReference Include="lcl\Laz_AVL_Tree.pas"/>
+			<DCCReference Include="lcl\PixTools.pas"/>
+			<DCCReference Include="lcl\pngcomn.pas"/>
+			<DCCReference Include="lcl\Trees.pas"/>
+			<DCCReference Include="lcl\ZBase.pas"/>
+			<DCCReference Include="lcl\ZDeflate.pas"/>
+			<DCCReference Include="lcl\ZStream.pas"/>
+			<DCCReference Include="bgrareadjpeg.pas"/>
+			<DCCReference Include="bgraslicescaling.pas"/>
+			<DCCReference Include="bgragradients.pas"/>
+			<DCCReference Include="bgraanimatedgif.pas"/>
+			<DCCReference Include="BGRABitmapTypes.pas"/>
+			<DCCReference Include="bgrabitmap.pas"/>
+			<None Include="bgrapixel.inc"/>
+			<None Include="density256.inc"/>
+			<BuildConfiguration Include="Release">
+				<Key>Cfg_2</Key>
+				<CfgParent>Base</CfgParent>
+			</BuildConfiguration>
+			<BuildConfiguration Include="Base">
+				<Key>Base</Key>
+			</BuildConfiguration>
+			<BuildConfiguration Include="Debug">
+				<Key>Cfg_1</Key>
+				<CfgParent>Base</CfgParent>
+			</BuildConfiguration>
+		</ItemGroup>
+		<ProjectExtensions>
+			<Borland.Personality>Delphi.Personality.12</Borland.Personality>
+			<Borland.ProjectType>Package</Borland.ProjectType>
+			<BorlandProject>
+				<Delphi.Personality>
+					<Source>
+						<Source Name="MainSource">bgrabitmappack.dpk</Source>
+					</Source>
+					<VersionInfo>
+						<VersionInfo Name="IncludeVerInfo">True</VersionInfo>
+						<VersionInfo Name="AutoIncBuild">False</VersionInfo>
+						<VersionInfo Name="MajorVer">1</VersionInfo>
+						<VersionInfo Name="MinorVer">0</VersionInfo>
+						<VersionInfo Name="Release">0</VersionInfo>
+						<VersionInfo Name="Build">0</VersionInfo>
+						<VersionInfo Name="Debug">False</VersionInfo>
+						<VersionInfo Name="PreRelease">False</VersionInfo>
+						<VersionInfo Name="Special">False</VersionInfo>
+						<VersionInfo Name="Private">False</VersionInfo>
+						<VersionInfo Name="DLL">False</VersionInfo>
+						<VersionInfo Name="Locale">1046</VersionInfo>
+						<VersionInfo Name="CodePage">1252</VersionInfo>
+					</VersionInfo>
+					<VersionInfoKeys>
+						<VersionInfoKeys Name="CompanyName"/>
+						<VersionInfoKeys Name="FileDescription"/>
+						<VersionInfoKeys Name="FileVersion">1.0.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="InternalName"/>
+						<VersionInfoKeys Name="LegalCopyright"/>
+						<VersionInfoKeys Name="LegalTrademarks"/>
+						<VersionInfoKeys Name="OriginalFilename"/>
+						<VersionInfoKeys Name="ProductName"/>
+						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="Comments"/>
+					</VersionInfoKeys>
+					<Excluded_Packages>
+						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\RtmRxDB160.bpl">RX Library DB Component Package</Excluded_Packages>
+						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\RtmRxCtl160.bpl">RX Library Component and Tools Package</Excluded_Packages>
+					</Excluded_Packages>
+				</Delphi.Personality>
+				<Deployment/>
+				<Platforms>
+					<Platform value="Win64">False</Platform>
+					<Platform value="OSX32">False</Platform>
+					<Platform value="Win32">True</Platform>
+				</Platforms>
+			</BorlandProject>
+			<ProjectFileVersion>12</ProjectFileVersion>
+		</ProjectExtensions>
+		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')" Project="$(BDS)\Bin\CodeGear.Delphi.Targets"/>
+		<Import Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')" Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj"/>
+	</Project>

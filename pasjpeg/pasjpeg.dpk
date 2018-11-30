@@ -1,0 +1,94 @@
+package pasjpeg;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$RUNONLY}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  designide,
+  vcldesigner,
+  dbrtl,
+  vcldb,
+  bdertl;
+
+contains
+  CDJPEG in 'CDJPEG.PAS',
+  JCAPIMIN in 'JCAPIMIN.PAS',
+  JCAPISTD in 'JCAPISTD.PAS',
+  JCCOEFCT in 'JCCOEFCT.PAS',
+  JCCOLOR in 'JCCOLOR.PAS',
+  JCDCTMGR in 'JCDCTMGR.PAS',
+  JCHUFF in 'JCHUFF.PAS',
+  JCINIT in 'JCINIT.PAS',
+  JCMAINCT in 'JCMAINCT.PAS',
+  JCMARKER in 'JCMARKER.PAS',
+  JCMASTER in 'JCMASTER.PAS',
+  JCOMAPI in 'JCOMAPI.PAS',
+  JCPARAM in 'JCPARAM.PAS',
+  JCPHUFF in 'JCPHUFF.PAS',
+  JCPREPCT in 'JCPREPCT.PAS',
+  JCSAMPLE in 'JCSAMPLE.PAS',
+  Jdapimin in 'Jdapimin.pas',
+  Jdapistd in 'Jdapistd.pas',
+  JDATADST in 'JDATADST.PAS',
+  JDATASRC in 'JDATASRC.PAS',
+  JDCOEFCT in 'JDCOEFCT.PAS',
+  JDCOLOR in 'JDCOLOR.PAS',
+  JDCT in 'JDCT.PAS',
+  JDDCTMGR in 'JDDCTMGR.PAS',
+  Jdeferr in 'Jdeferr.pas',
+  JDHUFF in 'JDHUFF.PAS',
+  JDINPUT in 'JDINPUT.PAS',
+  Jdmainct in 'Jdmainct.pas',
+  JDMARKER in 'JDMARKER.PAS',
+  jdmaster in 'jdmaster.pas',
+  JDMERGE in 'JDMERGE.PAS',
+  JDPHUFF in 'JDPHUFF.PAS',
+  JDPOSTCT in 'JDPOSTCT.PAS',
+  JDSAMPLE in 'JDSAMPLE.PAS',
+  jerror in 'jerror.pas',
+  JFDCTFLT in 'JFDCTFLT.PAS',
+  JFDCTFST in 'JFDCTFST.PAS',
+  JFDCTINT in 'JFDCTINT.PAS',
+  JIDCTFLT in 'JIDCTFLT.PAS',
+  JIDCTFST in 'JIDCTFST.PAS',
+  JIDCTINT in 'JIDCTINT.PAS',
+  JIDCTRED in 'JIDCTRED.PAS',
+  JINCLUDE in 'JINCLUDE.PAS',
+  Jmemmgr in 'Jmemmgr.pas',
+  Jmemnobs in 'Jmemnobs.pas',
+  JMORECFG in 'JMORECFG.PAS',
+  JPEGLIB in 'JPEGLIB.PAS',
+  JQUANT1 in 'JQUANT1.PAS',
+  JQUANT2 in 'JQUANT2.PAS',
+  JUTILS in 'JUTILS.PAS',
+  j_consts in 'j_consts.pas',
+  j_ctrans in 'j_ctrans.pas',
+  j_dtrans in 'j_dtrans.pas';
+
+end.
