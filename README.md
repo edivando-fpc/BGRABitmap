@@ -1,7 +1,7 @@
 ![GitHub](https://img.shields.io/badge/Delphi-XE2-red.svg)
 ![GitHub](https://img.shields.io/badge/Lazarus-FPC-blue.svg)
 
-# BGRA Controls for Delphi
+# BGRAbitmap and BGRAControls for Lazarus and Delphi
 
 BGRABitmap - Drawing routines with transparency and antialiasing with Lazarus. Offers also various transforms.
 
