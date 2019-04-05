@@ -1065,7 +1065,7 @@ end;
 
 class operator TPointF.NotEqual(const pt1, pt2: TPointF): boolean;
 begin
-  result := (pt1.x <> pt2.x) and (pt1.y <> pt2.y);
+  result := (pt1.x <> pt2.x) or (pt1.y <> pt2.y);
 end;
 
 class operator TPointF.Subtract(const pt1, pt2: TPointF): TPointF;
