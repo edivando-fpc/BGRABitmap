@@ -694,8 +694,15 @@ var
   procedure StartDash(index: integer; t: single);
   begin
     dashStartIndex := index;
-    dashLeftStartPos := leftPts[index] + (leftPts[index+1]-leftPts[index])*t;
-    dashRightStartPos := rightPts[index] + (rightPts[index+1]-rightPts[index])*t;
+    if t = 0 then
+    begin
+      dashLeftStartPos := leftPts[index];
+      dashRightStartPos := rightPts[index];
+    end else
+    begin
+      dashLeftStartPos := leftPts[index] + (leftPts[index+1]-leftPts[index])*t;
+      dashRightStartPos := rightPts[index] + (rightPts[index+1]-rightPts[index])*t;
+    end;
     betweenDash := false;
   end;
 
@@ -799,7 +806,7 @@ begin
     begin
       if len-lenDone < remainingDash then
       begin
-        remainingDash := remainingDash -len-lenDone;
+        remainingDash := remainingDash - (len-lenDone);
         if remainingDash = 0 then NextStyleIndex;
         lenDone := len;
       end else
