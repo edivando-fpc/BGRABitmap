@@ -285,7 +285,9 @@ procedure ArrayOfTBGRAPixel_InsertionSort(AColors: ArrayOfTBGRAPixel; AMinIndex,
 
 implementation
 
-uses BGRAUTF8 {$IFDEF FPC} ,bufstream{$ENDIF};
+uses BGRAUTF8 {$IFDEF FPC} ,bufstream{$ENDIF}
+{$IFDEF BDS},bgraendian{$ENDIF}
+;
 
 function IsDWordGreater(p1, p2: PBGRAPixel): boolean;
 {$IFDEF BDS}var _BGRADWord, _BGRADWord2 : BGRADWord;{$ENDIF}//#

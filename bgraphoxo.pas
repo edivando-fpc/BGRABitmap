@@ -123,7 +123,9 @@ procedure RegisterPhoxoFormat;
 
 implementation
 
-uses BGRAUTF8 {$IFDEF FPC},LazUTF8{$ENDIF};
+uses BGRAUTF8 {$IFDEF FPC},LazUTF8{$ENDIF}
+  {$IFDEF BDS},bgraendian{$ENDIF}
+  ;
 
 var AlreadyRegistered: boolean;
 
@@ -136,9 +138,9 @@ procedure SwapLayerHeaderIfNeeded(var ALayerHeader: TPhoxoLayerHeader);
 begin
   with ALayerHeader do
   begin
-    {$IFNDEF BDS}layerVisible := LEtoN(layerVisible);{$ENDIF}
-    {$IFNDEF BDS}layerLimited := LEtoN(layerLimited);{$ENDIF}
-    {$IFNDEF BDS}opacityPercent := LEtoN(opacityPercent);{$ENDIF}
+    layerVisible := LEtoN(layerVisible);
+    layerLimited := LEtoN(layerLimited);
+    opacityPercent := LEtoN(opacityPercent);
     {$IFNDEF ENDIAN_LITTLE}SwapBMPInfoHeader(bmpHeader);{$ENDIF}
   end;
 end;
@@ -301,7 +303,7 @@ begin
   dec(remaining, rawImageSize);
   if remaining >= 8 then
   begin
-    LayerOffset[layerIndex] := Point({$IFNDEF BDS}LEtoN{$ENDIF}(PLongInt(ABlockData)^),{$IFNDEF BDS}LEtoN{$ENDIF}((PLongInt(ABlockData)+1)^));
+    LayerOffset[layerIndex] := Point(LEtoN(PLongInt(ABlockData)^),LEtoN((PLongInt(ABlockData)+1)^));
     inc(ABlockData, 8);
     dec(remaining, 8);
   end;
@@ -344,14 +346,14 @@ begin
         PhoxoBlock_CanvasSize:
           begin
             if blockHeader.blockSize < 8 then raise EFormatError.Create('Block too small');
-            SetSize({$IFNDEF BDS}LEtoN{$ENDIF}(PBGRALongWord(blockData)^),{$IFNDEF BDS}LEtoN{$ENDIF}((PBGRALongWord(blockData)+1)^));
+            SetSize(LEtoN(PBGRALongWord(blockData)^),LEtoN((PBGRALongWord(blockData)+1)^));
           end;
         PhoxoBlock_DPI:
           begin
             if blockHeader.blockSize >= 8 then
             begin
-              FDPIX := {$IFNDEF BDS}LEtoN{$ENDIF}(PBGRALongWord(blockData)^);
-              FDPIY := {$IFNDEF BDS}LEtoN{$ENDIF}((PBGRALongWord(blockData)+1)^);
+              FDPIX :=LEtoN(PBGRALongWord(blockData)^);
+              FDPIY :=LEtoN((PBGRALongWord(blockData)+1)^);
             end;
           end;
         PhoxoBlock_Layer, PhoxoBlock_TextLayer:
@@ -362,7 +364,7 @@ begin
             begin
               setlength(wCaption, blockHeader.blockSize div 2);
               for i := 1 to length(wCaption) do
-                BGRAWord(wCaption[i]) := {$IFNDEF BDS}LEtoN{$ENDIF}((PBGRAWord(blockData)+i-1)^);
+                BGRAWord(wCaption[i]) := LEtoN((PBGRAWord(blockData)+i-1)^);
               if wCaption[1] = #1 then Delete(wCaption,1,1);
               LayerName[NbLayers-1] := UTF8Encode(wCaption);
 
@@ -374,7 +376,7 @@ begin
             begin
               setlength(wCaption, blockHeader.blockSize div 2);
               for i := 1 to length(wCaption) do
-                BGRAWord(wCaption[i]) := {$IFNDEF BDS}LEtoN{$ENDIF}((PBGRAWord(blockData)+i-1)^);
+                BGRAWord(wCaption[i]) := LEtoN((PBGRAWord(blockData)+i-1)^);
               BlendOperation[NbLayers-1] := StrToBlendOperation(UTF8Encode(wCaption));
             end;
           end;
@@ -414,21 +416,21 @@ procedure TBGRAPhoxoDocument.SaveToStream(AStream: TStream);
   begin
     fileHeader.magic := PhoxoHeaderMagic;
     fileHeader.version := 1;
-    {$IFNDEF BDS}fileHeader.version := NtoLE(fileHeader.version);{$ENDIF}
+    fileHeader.version := NtoLE(fileHeader.version);
     AStream.WriteBuffer(fileHeader, sizeof(fileHeader));
   end;
 
   procedure WriteBlockHeader(blockType: BGRALongWord; blockSize: BGRALongWord);
   var blockHeader: TPhoxoBlockHeader;
   begin
-    blockHeader.blockType := {$IFNDEF BDS}NtoLE{$ENDIF}(blockType);
-    blockHeader.blockSize := {$IFNDEF BDS}NtoLE{$ENDIF}(blockSize);
+    blockHeader.blockType := NtoLE(blockType);
+    blockHeader.blockSize := NtoLE(blockSize);
     AStream.WriteBuffer(blockHeader, sizeof(blockHeader));
   end;
 
   procedure WriteLongInt(value: BGRALongInt);
   begin
-    {$IFNDEF BDS}value := NtoLE(value);{$ENDIF}
+    value := NtoLE(value);
     AStream.WriteBuffer(value, sizeof(value));
   end;
 
@@ -520,7 +522,7 @@ procedure TBGRAPhoxoDocument.SaveToStream(AStream: TStream);
       getmem(pCaption, length(wCaption)*2);
       try
         for i := 1 to length(wCaption) do
-          (pCaption+i-1)^ := {$IFNDEF BDS}NtoLE{$ENDIF}(BGRAWord(wCaption[i]));
+          (pCaption+i-1)^ := NtoLE(BGRAWord(wCaption[i]));
         AStream.WriteBuffer(pCaption^, length(wCaption)*2);
       finally
         freemem(pCaption);
@@ -538,7 +540,7 @@ procedure TBGRAPhoxoDocument.SaveToStream(AStream: TStream);
       getmem(pCaption, length(wCaption)*2);
       try
         for i := 1 to length(wCaption) do
-          (pCaption+i-1)^ := {$IFNDEF BDS}NtoLE{$ENDIF}(BGRAWord(wCaption[i]));
+          (pCaption+i-1)^ := NtoLE(BGRAWord(wCaption[i]));
         AStream.WriteBuffer(pCaption^, length(wCaption)*2);
       finally
         freemem(pCaption);
@@ -576,7 +578,7 @@ begin
   if Stream.Read({%H-}header,sizeof(header))<>sizeof(header) then
     result := false else
   begin
-    {$IFNDEF BDS}header.version:= LEtoN(header.version);{$ENDIF}
+    header.version:= LEtoN(header.version);
     if (header.magic <> PhoxoHeaderMagic) or (header.version <> 1) then
       result := false
     else
@@ -596,8 +598,8 @@ begin
     result := false;
     exit;
   end;
-  {$IFNDEF BDS}AHeader.blockType := LEtoN(AHeader.blockType);{$ENDIF}
-  {$IFNDEF BDS}AHeader.blockSize := LEtoN(AHeader.blockSize);{$ENDIF}
+  AHeader.blockType := LEtoN(AHeader.blockType);
+  AHeader.blockSize := LEtoN(AHeader.blockSize);
   if Stream.Position + AHeader.blockSize > Stream.Size then
   begin
     AHeader.blockSize := 0;

@@ -244,7 +244,10 @@ type
 
 implementation
 
-uses Math, BGRAUTF8, StrUtils;
+uses Math, BGRAUTF8, StrUtils
+  {$IFDEF BDS},bgraendian{$ENDIF}
+  ;
+
 
 class operator TNameOrId.{$IFDEF OBJ}={$ELSE}Equal{$ENDIF}(const ANameOrId1, ANameOrId2: TNameOrId): boolean;
 begin
@@ -320,9 +323,9 @@ end;
 
 procedure TGroupIconHeader.SwapIfNecessary;
 begin
-  {$IFNDEF BDS}Reserved := LEtoN(Reserved);{$ENDIF}
-  {$IFNDEF BDS}ResourceType := LEtoN(ResourceType);{$ENDIF}
-  {$IFNDEF BDS}ImageCount := LEtoN(ImageCount);{$ENDIF}
+  Reserved := LEtoN(Reserved);
+  ResourceType := LEtoN(ResourceType);
+  ImageCount := LEtoN(ImageCount);
 end;
 
 { TGroupIconOrCursorEntry }
@@ -338,7 +341,7 @@ var
 begin
   Result:= sizeof(FGroupIconHeader) + sizeof(TIconFileDirEntry)*NbIcons;
   for i := 0 to NbIcons-1 do
-    Result := Result +{$IFNDEF BDS}LEtoN{$ENDIF}(FDirectory[i].ImageSize);
+    Result := Result +LEtoN(FDirectory[i].ImageSize);
 end;
 
 function TGroupIconOrCursorEntry.GetDataSize: integer;
@@ -362,7 +365,7 @@ var
   i: Integer;
 begin
   for i := 0 to NbIcons-1 do
-    TWinResourceContainer(Container).IncrementReferenceOf({$IFNDEF BDS}LEtoN{$ENDIF}(FDirectory[i].ImageId), TypeId - RT_GROUP);
+    TWinResourceContainer(Container).IncrementReferenceOf(LEtoN(FDirectory[i].ImageId), TypeId - RT_GROUP);
 end;
 
 procedure TGroupIconOrCursorEntry.DecrementReferences;
@@ -370,7 +373,7 @@ var
   i: Integer;
 begin
   for i := 0 to NbIcons-1 do
-    TWinResourceContainer(Container).DecrementReferenceOf({$IFNDEF BDS}LEtoN{$ENDIF}(FDirectory[i].ImageId), TypeId - RT_GROUP);
+    TWinResourceContainer(Container).DecrementReferenceOf(LEtoN(FDirectory[i].ImageId), TypeId - RT_GROUP);
 end;
 
 constructor TGroupIconOrCursorEntry.Create(AContainer: TMultiFileContainer;
@@ -447,7 +450,7 @@ begin
   for i := 0 to NbIcons-1 do
   begin
     move(FDirectory[i], fileDir[i], 12);
-    fileDir[i].ImageOffset := {$IFNDEF BDS}NtoLE{$ENDIF}(offset);
+    fileDir[i].ImageOffset := NtoLE(offset);
     inc(offset, fileDir[i].ImageSize);
   end;
 
@@ -457,8 +460,8 @@ begin
   subType := NameOrId(TypeId - RT_GROUP);
   for i := 0 to NbIcons-1 do
   begin
-    iconEntry := (Container as TWinResourceContainer).InternalFind(NameOrId({$IFNDEF BDS}LEtoN{$ENDIF}(FDirectory[i].ImageId)),subType); //no language for icons
-    iconEntrySize := {$IFNDEF BDS}LEtoN{$ENDIF}(FDirectory[i].ImageSize);
+    iconEntry := (Container as TWinResourceContainer).InternalFind(NameOrId(LEtoN(FDirectory[i].ImageId)),subType); //no language for icons
+    iconEntrySize := LEtoN(FDirectory[i].ImageSize);
     if iconEntry = nil then
       FillZero(iconEntrySize) else
     begin
@@ -505,9 +508,9 @@ begin
     setlength(iconStream, tempGroup.ImageCount);
     for i := 0 to tempGroup.ImageCount-1 do
     begin
-      ASource.Position:= startPos + {$IFNDEF BDS}LEtoN{$ENDIF}(fileDir[i].ImageOffset);
+      ASource.Position:= startPos + LEtoN(fileDir[i].ImageOffset);
       iconStream[i] := TMemoryStream.Create;
-      iconStream[i].CopyFrom(ASource, {$IFNDEF BDS}LEtoN{$ENDIF}(fileDir[i].ImageSize));
+      iconStream[i].CopyFrom(ASource, LEtoN(fileDir[i].ImageSize));
     end;
 
     subType := NameOrId(self.TypeId - RT_GROUP);
@@ -577,7 +580,7 @@ begin
   if fileHeader.bfType <> BGRAWord(PChar('BM')) then
   {$ENDIF}
     raise exception.Create('Invalid file header');
-  dataSize := {$IFNDEF BDS}LEtoN{$ENDIF}(fileHeader.bfSize) - sizeof(fileHeader);
+  dataSize := LEtoN(fileHeader.bfSize) - sizeof(fileHeader);
   if ASource.Position + dataSize > ASource.Size then
     raise exception.Create('Invalid file size');
 
@@ -660,11 +663,11 @@ end;
 
 procedure TResourceInfo.SwapIfNecessary;
 begin
-  {$IFNDEF BDS}DataVersion := LEtoN(DataVersion);{$ENDIF}
-  {$IFNDEF BDS}MemoryFlags := LEtoN(MemoryFlags);{$ENDIF}
-  {$IFNDEF BDS}LanguageId := LEtoN(LanguageId);{$ENDIF}
-  {$IFNDEF BDS}Version := LEtoN(Version);{$ENDIF}
-  {$IFNDEF BDS}Characteristics := LEtoN(Characteristics);{$ENDIF}
+  DataVersion := LEtoN(DataVersion);
+  MemoryFlags := LEtoN(MemoryFlags);
+  LanguageId := LEtoN(LanguageId);
+  Version := LEtoN(Version);
+  Characteristics := LEtoN(Characteristics);
 end;
 
 { TCustomResourceEntry }
@@ -683,11 +686,7 @@ function GetDWord(var ASource: PByte; var ARemainingBytes: Integer): BGRADWord;
 begin
   if ARemainingBytes >= 4 then
   begin
-    {$IFDEF BDS}
-    move(ASource, result, sizeof(BGRADWord));
-    {$ELSE}//#
     result := LEtoN(PBGRADWord(ASource)^);
-    {$ENDIF}
     inc(ASource, 4);
     dec(ARemainingBytes, 4);
   end else
@@ -702,11 +701,7 @@ function GetWord(var ASource: PByte; var ARemainingBytes: Integer): BGRAWord;
 begin
   if ARemainingBytes >= 2 then
   begin
-    {$IFDEF BDS}
-    move(ASource, result, sizeof(BGRADWord));
-    {$ELSE}//#
     result := LEtoN(PBGRAWord(ASource)^);
-    {$ENDIF}
     inc(ASource, 2);
     dec(ARemainingBytes, 2);
   end else
@@ -755,8 +750,8 @@ begin
   result := nil;
   if AStream.Position + 16 < AStream.Size then
   begin
-    entrySize := {$IFNDEF BDS}LEtoN{$ENDIF}(AStream.ReadDWord);
-    headerSize := {$IFNDEF BDS}LEtoN{$ENDIF}(AStream.ReadDWord);
+    entrySize := LEtoN(AStream.ReadDWord);
+    headerSize := LEtoN(AStream.ReadDWord);
     if headerSize < 16 then
       raise exception.Create('Header too small');
     remaining := ((headerSize-8) + 3) and not 3;
@@ -814,7 +809,7 @@ begin
   end else
   begin
     ADestination.WriteWord($ffff);
-    ADestination.WriteWord({$IFNDEF BDS}NtoLE{$ENDIF}(BGRAWord(ANameOrId.Id)));
+    ADestination.WriteWord(NtoLE(BGRAWord(ANameOrId.Id)));
   end;
 end;
 
@@ -858,7 +853,7 @@ var
   end;
   headerStream: TMemoryStream;
 begin
-  entryHeader.EntrySize := {$IFNDEF BDS}LEtoN{$ENDIF}(GetDataSize);
+  entryHeader.EntrySize := LEtoN(GetDataSize);
   headerStream := TMemoryStream.Create;
   try
     WriteNameOrId(headerStream,FTypeNameOrId);
@@ -870,7 +865,7 @@ begin
     finally
       FResourceInfo.SwapIfNecessary;
     end;
-    entryHeader.HeaderSize := {$IFNDEF BDS}LEtoN{$ENDIF}(integer(headerStream.Size+8));
+    entryHeader.HeaderSize := LEtoN(integer(headerStream.Size+8));
     headerStream.Position:= 0;
     ADestination.WriteBuffer(entryHeader, sizeof(entryHeader));
     ADestination.CopyFrom(headerStream, headerStream.Size);

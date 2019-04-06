@@ -162,6 +162,11 @@ procedure GIFEncodeLZW(AStream: TStream; AImageData: PByte;
 
 implementation
 
+
+{$IFDEF BDS}
+uses bgraendian;
+{$ENDIF}
+
 function PackedRgbTribleToBGRA(rgb: TPackedRGBTriple): TBGRAPixel;
 begin
   Result.red   := rgb.r;
@@ -726,10 +731,10 @@ var
     palette: ArrayOfTBGRAPixel;
   begin
     stream.Read(GIFImageDescriptor, sizeof(GIFImageDescriptor));
-    {$IFNDEF BDS}GIFImageDescriptor.Width := LEtoN(GIFImageDescriptor.Width);{$ENDIF}
-    {$IFNDEF BDS}GIFImageDescriptor.Height := LEtoN(GIFImageDescriptor.Height);{$ENDIF}
-    {$IFNDEF BDS}GIFImageDescriptor.x := LEtoN(GIFImageDescriptor.x);{$ENDIF}
-    {$IFNDEF BDS}GIFImageDescriptor.y := LEtoN(GIFImageDescriptor.y);{$ENDIF}
+    GIFImageDescriptor.Width := LEtoN(GIFImageDescriptor.Width);
+    GIFImageDescriptor.Height := LEtoN(GIFImageDescriptor.Height);
+    GIFImageDescriptor.x := LEtoN(GIFImageDescriptor.x);
+    GIFImageDescriptor.y := LEtoN(GIFImageDescriptor.y);
     if (GIFImageDescriptor.flags and GIFImageDescriptor_LocalColorTableFlag =
       GIFImageDescriptor_LocalColorTableFlag) then
       LoadLocalPalette
@@ -779,7 +784,7 @@ var
         begin
           mincount := sizeof(GIFGraphicControlExtension);
           stream.ReadBuffer({%H-}GIFGraphicControlExtension, mincount);
-          {$IFNDEF BDS}GIFGraphicControlExtension.DelayHundredthSec := LEtoN(GIFGraphicControlExtension.DelayHundredthSec);{$ENDIF}
+          GIFGraphicControlExtension.DelayHundredthSec := LEtoN(GIFGraphicControlExtension.DelayHundredthSec);
 
           if GIFGraphicControlExtension.flags and
             GIFGraphicControlExtension_TransparentFlag =
@@ -811,7 +816,7 @@ var
               begin
                 stream.ReadBuffer(result.LoopCount, 2);
                 dec(Count,2);
-                {$IFNDEF BDS}result.LoopCount := LEtoN(result.LoopCount);{$ENDIF}
+                result.LoopCount := LEtoN(result.LoopCount);
                 if result.LoopCount > 0 then inc(result.LoopCount);
               end;
               stream.Position:= stream.Position+Count;
@@ -846,8 +851,8 @@ begin
   if (GIFSignature[1] = 'G') and (GIFSignature[2] = 'I') and (GIFSignature[3] = 'F') then
   begin
     stream.ReadBuffer({%H-}GIFScreenDescriptor, sizeof(GIFScreenDescriptor));
-    {$IFNDEF BDS}GIFScreenDescriptor.Width := LEtoN(GIFScreenDescriptor.Width);{$ENDIF}
-    {$IFNDEF BDS}GIFScreenDescriptor.Height := LEtoN(GIFScreenDescriptor.Height);{$ENDIF}
+    GIFScreenDescriptor.Width := LEtoN(GIFScreenDescriptor.Width);
+    GIFScreenDescriptor.Height := LEtoN(GIFScreenDescriptor.Height);
     result.Width  := GIFScreenDescriptor.Width;
     result.Height := GIFScreenDescriptor.Height;
     if GIFScreenDescriptor.AspectRatio64 = 0 then
@@ -1189,7 +1194,7 @@ var
       w := 0
     else
       w := AData.LoopCount-1;
-    {$IFNDEF BDS}w := NtoLE(w);{$ENDIF}
+    w := NtoLE(w);
     Stream.WriteWord(w);
 
     Stream.WriteByte(0);
@@ -1201,8 +1206,8 @@ begin
   globalTranspIndex:= -1;
   try
     signature := 'GIF89a';
-    screenDescriptor.Width := {$IFNDEF BDS}NtoLE{$ENDIF}(AData.Width);
-    screenDescriptor.Height := {$IFNDEF BDS}NtoLE{$ENDIF}(AData.Height);
+    screenDescriptor.Width := NtoLE(AData.Width);
+    screenDescriptor.Height := NtoLE(AData.Height);
     screenDescriptor.flags := $70;               //suppose 8-bit screen
     screenDescriptor.BackgroundColorIndex := 0;  //not specified for now
     screenDescriptor.AspectRatio64 := round(AData.AspectRatio*64)-15;

@@ -953,7 +953,9 @@ uses Math, BGRAUTF8, BGRABlend, BGRAFilters, BGRAGradientScanner,
   BGRAResample, BGRAPolygon, BGRAPolygonAliased,
   BGRAPath, {$IFDEF FPC}FPReadPcx, FPWritePcx,{$ENDIF}  FPReadXPM, FPWriteXPM,
   BGRAReadBMP, BGRAReadJpeg,
-  BGRADithering, BGRAFilterScanner;
+  BGRADithering, BGRAFilterScanner
+  {$IFDEF BDS},bgraendian{$ENDIF}
+  ;
 
 { TBitmapTracker }
 
@@ -1541,8 +1543,8 @@ end;
 procedure TBGRADefaultBitmap.Serialize(AStream: TStream);
 var lWidth,lHeight,y: integer;
 begin
-  lWidth := {$IFNDEF BDS}NtoLE{$ENDIF}(Width);
-  lHeight := {$IFNDEF BDS}NtoLE{$ENDIF}(Height);
+  lWidth := NtoLE(Width);
+  lHeight := NtoLE(Height);
   AStream.Write(lWidth,sizeof(lWidth));
   AStream.Write(lHeight,sizeof(lHeight));
   If TBGRAPixel_RGBAOrder then TBGRAFilterScannerSwapRedBlue.ComputeFilterAt(FData,FData,FNbPixels,False);
@@ -1556,8 +1558,8 @@ var lWidth,lHeight,y: integer;
 begin
   AStream.Read({%H-}lWidth,sizeof(lWidth));
   AStream.Read({%H-}lHeight,sizeof(lHeight));
-  {$IFNDEF BDS}lWidth := LEtoN(lWidth){$ENDIF};
-  {$IFNDEF BDS}lHeight := LEtoN(lHeight){$ENDIF};
+  lWidth := LEtoN(lWidth);
+  lHeight := LEtoN(lHeight);
   SetSize(lWidth,lHeight);
   for y := 0 to Height-1 do
     AStream.Read(ScanLine[y]^, Width*sizeof(TBGRAPixel));

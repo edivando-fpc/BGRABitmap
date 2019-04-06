@@ -114,7 +114,9 @@ procedure RegisterPaintNetFormat;
 
 implementation
 
-uses zstream, Math, BGRAUTF8;
+uses zstream, Math, BGRAUTF8
+  {$IFDEF BDS},bgraendian{$ENDIF}
+  ;
 
 {$hints off}
 function BEReadLongword(Stream: TStream): BGRALongWord;
@@ -314,14 +316,14 @@ begin
     raise Exception.Create('Invalid header');
   XmlHeaderSize := 0;
   stream.Read(XmlHeaderSize, 3);
-  {$IFNDEF BDS}XmlheaderSize := LEtoN(XmlheaderSize);{$ENDIF}
+  XmlheaderSize := LEtoN(XmlheaderSize);
   if Stream.Position + XmlHeaderSize > stream.Size then
     raise Exception.Create('Xml header size error');
   Stream.Position:= Stream.Position + XmlHeaderSize;
      {$hints off}
   stream.ReadBuffer(CompressionFormat, sizeof(CompressionFormat));
      {$hints on}
-  {$IFNDEF BDS}CompressionFormat := LEtoN(CompressionFormat);{$ENDIF}
+  CompressionFormat := LEtoN(CompressionFormat);
   Content := TDotNetDeserialization.Create;
   case Compressionformat of
     $0100: Content.LoadFromStream(Stream);

@@ -105,7 +105,9 @@ function BGRADitherIconCursor(ABitmap: TBGRACustomBitmap; ABitDepth: integer; AD
 implementation
 
 uses BGRAWinResource, BGRAUTF8, BGRAReadPng, BGRAReadBMP, FPWriteBMP, BGRAPalette, BGRAWritePNG,
-  BGRAColorQuantization;
+  BGRAColorQuantization
+  {$IFDEF BDS},bgraendian{$ENDIF}
+  ;
 
 function BGRADitherIconCursor(ABitmap: TBGRACustomBitmap; ABitDepth: integer;
   ADithering: TDitheringAlgorithm): TBGRACustomBitmap;
@@ -238,24 +240,24 @@ begin
 
         //fix height
         tempStream.Position := 0;
-        headerSize := {$IFNDEF BDS}LEtoN{$ENDIF}(tempStream.ReadDWord);
+        headerSize := LEtoN(tempStream.ReadDWord);
         if headerSize = sizeof(TOS2BitmapHeader) then // OS/2 1.x
         begin
           tempStream.Position := 6;
-          tempStream.WriteWord({$IFNDEF BDS}NtoLE{$ENDIF}(BGRAWord(bmp.Height*2))); //include mask size
+          tempStream.WriteWord(NtoLE(BGRAWord(bmp.Height*2))); //include mask size
         end else
         begin
           tempStream.Position := 8;
-          tempStream.WriteDWord({$IFNDEF BDS}NtoLE{$ENDIF}(BGRADWord(bmp.Height*2))); //include mask size
+          tempStream.WriteDWord(NtoLE(BGRADWord(bmp.Height*2))); //include mask size
           if headerSize >= 20+4 then
           begin
             tempStream.Position:= 20;
-            dataSize := {$IFNDEF BDS}LEtoN{$ENDIF}(tempStream.ReadDWord);
+            dataSize := LEtoN(tempStream.ReadDWord);
             if dataSize <> 0 then
             begin //if data size is supplied, include mask size
               dataSize := dataSize +(maskStride*bmp.Height);
               tempStream.Position:= 20;
-              tempStream.WriteDWord({$IFNDEF BDS}NtoLE{$ENDIF}(dataSize));
+              tempStream.WriteDWord(NtoLE(dataSize));
             end;
           end;
         end;
@@ -682,9 +684,9 @@ begin
     AStream.ReadBuffer(dir[0], sizeof(TIconFileDirEntry)*length(dir));
     for i := 0 to high(dir) do
     begin
-      AStream.Position:= {$IFNDEF BDS}LEtoN{$ENDIF}(dir[i].ImageOffset) + startPos;
+      AStream.Position:= LEtoN(dir[i].ImageOffset) + startPos;
       entryContent := TMemoryStream.Create;
-      entryContent.CopyFrom(AStream, {$IFNDEF BDS}LEtoN{$ENDIF}(dir[i].ImageSize));
+      entryContent.CopyFrom(AStream, LEtoN(dir[i].ImageSize));
       entryIndex := Add(entryContent, false, true);
       if ((dir[i].Width = 0) and (Width[entryIndex] < 256)) or
          ((dir[i].Width > 0) and (Width[entryIndex] <> dir[i].Width)) or
@@ -692,7 +694,7 @@ begin
          ((dir[i].Height > 0) and (Height[entryIndex] <> dir[i].Height)) then
           raise Exception.Create('Inconsistent image size');
       if FFileType = ifCur then
-        TBGRAIconCursorEntry(Entry[entryIndex]).HotSpot := Point({$IFNDEF BDS}LEtoN{$ENDIF}(dir[i].HotSpotX),{$IFNDEF BDS}LEtoN{$ENDIF}(dir[i].HotSpotY));
+        TBGRAIconCursorEntry(Entry[entryIndex]).HotSpot := Point(LEtoN(dir[i].HotSpotX),LEtoN(dir[i].HotSpotY));
     end;
   finally
     FLoading:= false;
@@ -732,13 +734,13 @@ begin
       dir[i].Colors := 0;
     dir[i].Reserved := 0;
     case FFileType of
-    ifCur: begin dir[i].HotSpotX:= {$IFNDEF BDS}NtoLE{$ENDIF}(BGRAWord(HotSpot[i].X)); dir[i].HotSpotY := {$IFNDEF BDS}NtoLE{$ENDIF}(BGRAWord(HotSpot[i].Y)); end;
-    ifIco: begin dir[i].BitsPerPixel:= {$IFNDEF BDS}NtoLE{$ENDIF}(BGRAWord(BitDepth[i])); dir[i].Planes := {$IFNDEF BDS}NtoLE{$ENDIF}(BGRAWord(1)); end;
+    ifCur: begin dir[i].HotSpotX:= NtoLE(BGRAWord(HotSpot[i].X)); dir[i].HotSpotY := NtoLE(BGRAWord(HotSpot[i].Y)); end;
+    ifIco: begin dir[i].BitsPerPixel:= NtoLE(BGRAWord(BitDepth[i])); dir[i].Planes :=NtoLE(BGRAWord(1)); end;
     else dir[i].Variable:= 0;
     end;
-    dir[i].ImageOffset := {$IFNDEF BDS}LEtoN{$ENDIF}(accSize);
+    dir[i].ImageOffset := LEtoN(accSize);
     contentSize:= Entry[i].FileSize;
-    dir[i].ImageSize := {$IFNDEF BDS}NtoLE{$ENDIF}(contentSize);
+    dir[i].ImageSize := NtoLE(contentSize);
     inc(accSize,contentSize);
   end;
 

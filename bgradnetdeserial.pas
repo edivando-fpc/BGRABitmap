@@ -218,7 +218,9 @@ function WinReadQWord(Stream: TStream): BGRAQWord;
 
 implementation
 
-uses BGRAUTF8;
+uses BGRAUTF8
+  {$IFDEF BDS},bgraendian{$ENDIF}
+  ;
 
 const
   //block types
@@ -252,37 +254,37 @@ end;
 function WinReadWord(Stream: TStream): BGRAWord;
 begin
   stream.Read(Result, sizeof(Result));
-  {$IFNDEF BDS}Result := LEtoN(Result);{$ENDIF}
+  Result := LEtoN(Result);
 end;
 
 function WinReadSmallInt(Stream: TStream): smallint;
 begin
   stream.Read(Result, sizeof(Result));
-  {$IFNDEF BDS}Result := LEtoN(Result);{$ENDIF}
+  Result := LEtoN(Result);
 end;
 
 function WinReadLongint(Stream: TStream): BGRALongInt;
 begin
   stream.Read(Result, sizeof(Result));
-  {$IFNDEF BDS}Result := LEtoN(Result);{$ENDIF}
+  Result := LEtoN(Result);
 end;
 
 function WinReadLongword(Stream: TStream): BGRALongWord;
 begin
   stream.Read(Result, sizeof(Result));
-  {$IFNDEF BDS}Result := LEtoN(Result);{$ENDIF}
+  Result := LEtoN(Result);
 end;
 
 function WinReadInt64(Stream: TStream): BGRAInt64;
 begin
   stream.Read(Result, sizeof(Result));
-  {$IFNDEF BDS}Result := LEtoN(Result);{$ENDIF}
+  Result := LEtoN(Result);
 end;
 
 function WinReadQWord(Stream: TStream): BGRAQWord;
 begin
   stream.Read(Result, sizeof(Result));
-  {$IFNDEF BDS}Result := LEtoN(Result);{$ENDIF}
+  Result := LEtoN(Result);
 end;
 
 {$hints on}
@@ -372,7 +374,7 @@ begin
           {$hints off}
           move(value, value2bytes.tempWord,sizeof(BGRAWord));
           {$hints on}
-          {$IFNDEF BDS}value2bytes.tempWord := LEtoN(value2bytes.tempWord);{$ENDIF}
+          value2bytes.tempWord := LEtoN(value2bytes.tempWord);
           if fieldType.primitiveType = ptInt16 then
             Result := IntToStr(value2bytes.tempInt16)
           else
@@ -383,7 +385,7 @@ begin
           {$hints off}
           move(value, value4bytes.tempLongWord,sizeof(BGRALongWord));
           {$hints on}
-          {$IFNDEF BDS}value4bytes.tempLongWord := LEtoN(value4bytes.tempLongWord);{$ENDIF}
+          value4bytes.tempLongWord := LEtoN(value4bytes.tempLongWord);
           if fieldType.primitiveType = ptInt32 then
             Result := IntToStr(value4bytes.tempLongInt)
           else if fieldType.primitiveType = ptUInt32 then
@@ -397,7 +399,7 @@ begin
           {$hints off}
           move(value, value8bytes.tempUInt64,8);
           {$hints on}
-          {$IFNDEF BDS}value8bytes.tempUInt64 := LEtoN(value8bytes.tempUInt64);{$ENDIF}
+          value8bytes.tempUInt64 := LEtoN(value8bytes.tempUInt64);
           if fieldType.primitiveType = ptInt64 then
             Result := IntToStr(value8bytes.tempInt64)
           else if fieldType.primitiveType = ptUInt64 then

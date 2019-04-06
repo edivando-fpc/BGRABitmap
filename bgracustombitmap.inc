@@ -932,8 +932,8 @@ begin
     colorMask := colorMask or BGRALongWord(BGRA(0,0,0,255));
     colorZeros:= colorZeros or BGRALongWord(BGRA(0,0,0,ANothingValue));
   end;
-  {$IFNDEF BDS}colorMask := NtoLE(colorMask){$ENDIF};
-  {$IFNDEF BDS}colorZeros := NtoLE(colorZeros){$ENDIF};
+  colorMask := NtoLE(colorMask);
+  colorZeros := NtoLE(colorZeros);
   for yb := actualRect.Top to actualRect.Bottom-1 do
   begin
     if ASourceBitmap <> nil then

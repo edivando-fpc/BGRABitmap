@@ -60,7 +60,9 @@ procedure RegisterStreamLayers;
 implementation
 
 uses BGRABitmapTypes, {$IFDEF FPC}BGRACompressableBitmap, zstream, BGRAReadLzp, BGRAWriteLzp,  {$ENDIF}
-     BGRAUTF8, Math;
+     BGRAUTF8, Math
+     {$IFDEF BDS},bgraendian{$ENDIF}
+     ;
 
 type
   PLayerHeader = ^TLayerHeader;
@@ -81,40 +83,38 @@ type
 
 { TLayerHeader }
 
-{.$IFDEF OBJ}//#
+
 procedure TLayerHeader.FixEndian;
-{$IFDEF BDS}var _single : Single; _BGRADWord : BGRADWord;{$ENDIF}
 begin
-  {$IFNDEF BDS}LayerOption := NtoLE(LayerOption);{$ENDIF}
-  {$IFNDEF BDS}BlendOp := NtoLE(BlendOp);{$ENDIF}
-  {$IFNDEF BDS}LayerOfsX := NtoLE(LayerOfsX);{$ENDIF}
-  {$IFNDEF BDS}LayerOfsY := NtoLE(LayerOfsY);{$ENDIF}
-  {$IFNDEF BDS}LayerUniqueId := NtoLE(LayerUniqueId);{$ENDIF}
-  {$IFNDEF BDS}LayerOpacity := NtoLE(LayerOpacity);{$ENDIF}
-  {$IFNDEF BDS}LayerBitmapSize := NtoLE(LayerBitmapSize);{$ENDIF}
-  {$IFNDEF BDS}OriginalGuid.D1 := NtoBE(OriginalGuid.D1);{$ENDIF}
-  {$IFNDEF BDS}OriginalGuid.D2 := NtoBE(OriginalGuid.D2);{$ENDIF}
-  {$IFNDEF BDS}OriginalGuid.D3 := NtoBE(OriginalGuid.D3);{$ENDIF}
-  {$IF DEFINED(OBJ) OR NOT DEFINED(BDS)}
-  {$IFNDEF BDS}BGRADWord(OriginalMatrix[1,1]) := NtoLE(BGRADWord(OriginalMatrix[1,1]));{$ENDIF}
-  {$IFNDEF BDS}BGRADWord(OriginalMatrix[2,1]) := NtoLE(BGRADWord(OriginalMatrix[2,1]));{$ENDIF}
-  {$IFNDEF BDS}BGRADWord(OriginalMatrix[1,2]) := NtoLE(BGRADWord(OriginalMatrix[1,2]));{$ENDIF}
-  {$IFNDEF BDS}BGRADWord(OriginalMatrix[2,2]) := NtoLE(BGRADWord(OriginalMatrix[2,2]));{$ENDIF}
-  {$IFNDEF BDS}BGRADWord(OriginalMatrix[1,3]) := NtoLE(BGRADWord(OriginalMatrix[1,3]));{$ENDIF}
-  {$IFNDEF BDS}BGRADWord(OriginalMatrix[2,3]) := NtoLE(BGRADWord(OriginalMatrix[2,3]));{$ENDIF}
-  {$ELSE}//#
+  LayerOption := NtoLE(LayerOption);
+  BlendOp := NtoLE(BlendOp);
+  LayerOfsX := NtoLE(LayerOfsX);
+  LayerOfsY := NtoLE(LayerOfsY);
+  LayerUniqueId := NtoLE(LayerUniqueId);
+  LayerOpacity := NtoLE(LayerOpacity);
+  LayerBitmapSize := NtoLE(LayerBitmapSize);
+  OriginalGuid.D1 := NtoBE(OriginalGuid.D1);
+  OriginalGuid.D2 := NtoBE(OriginalGuid.D2);
+  OriginalGuid.D3 := NtoBE(OriginalGuid.D3);
+
   {$IFDEF BDS}
-  _single := OriginalMatrix[1,1];  move(_single , _BGRADWord, sizeof(single)); move(_BGRADWord , OriginalMatrix[1,1], sizeof(dword));
-  _single := OriginalMatrix[2,1];  move(_single , _BGRADWord, sizeof(single)); move(_BGRADWord , OriginalMatrix[2,1], sizeof(dword));
-  _single := OriginalMatrix[1,2];  move(_single , _BGRADWord, sizeof(single)); move(_BGRADWord , OriginalMatrix[1,2], sizeof(dword));
-  _single := OriginalMatrix[2,2];  move(_single , _BGRADWord, sizeof(single)); move(_BGRADWord , OriginalMatrix[2,2], sizeof(dword));
-  _single := OriginalMatrix[1,3];  move(_single , _BGRADWord, sizeof(single)); move(_BGRADWord , OriginalMatrix[1,3], sizeof(dword));
-  _single := OriginalMatrix[2,3];  move(_single , _BGRADWord, sizeof(single)); move(_BGRADWord , OriginalMatrix[2,3], sizeof(dword));
+  OriginalMatrix[1,1] := NtoLE(OriginalMatrix[1,1]);
+  OriginalMatrix[2,1] := NtoLE(OriginalMatrix[2,1]);
+  OriginalMatrix[1,2] := NtoLE(OriginalMatrix[1,2]);
+  OriginalMatrix[2,2] := NtoLE(OriginalMatrix[2,2]);
+  OriginalMatrix[1,3] := NtoLE(OriginalMatrix[1,3]);
+  OriginalMatrix[2,3] := NtoLE(OriginalMatrix[2,3]);
+  {$ELSE}
+  DWord(OriginalMatrix[1,1]) := NtoLE(DWord(OriginalMatrix[1,1]));
+  DWord(OriginalMatrix[2,1]) := NtoLE(DWord(OriginalMatrix[2,1]));
+  DWord(OriginalMatrix[1,2]) := NtoLE(DWord(OriginalMatrix[1,2]));
+  DWord(OriginalMatrix[2,2]) := NtoLE(DWord(OriginalMatrix[2,2]));
+  DWord(OriginalMatrix[1,3]) := NtoLE(DWord(OriginalMatrix[1,3]));
+  DWord(OriginalMatrix[2,3]) := NtoLE(DWord(OriginalMatrix[2,3]));
   {$ENDIF}
-  {$IFEND}
 end;
 
-{$IFDEF OBJ}//#
+{$IFDEF FPC}//#
 procedure SaveLayeredBitmapToStream(AStream: TStream; ALayers: TBGRACustomLayeredBitmap);
 begin
   SaveLayersToStream(AStream,ALayers,-1);
@@ -242,10 +242,10 @@ begin
       h.BlendOp:= integer(result.DefaultBlendingOperation);
       h.LayerOpacity := 65535; //opaque
       h.LayerUniqueId:= maxLongint;
-      {$IFDEF OBJ}h.FixEndian;{$ENDIF}
+      h.FixEndian;
 
       AStream.ReadBuffer(h, min(LayerHeaderSize, sizeof(h)));
-      {$IFDEF OBJ}h.FixEndian;{$ENDIF}
+      h.FixEndian;
 
       if h.BlendOp > ord(high(TBlendOperation)) then
         LayerBlendOp := result.DefaultBlendingOperation
@@ -334,7 +334,7 @@ begin
     h.LayerBitmapSize := 0;
     h.OriginalGuid := ALayers.LayerOriginalGuid[i];
     h.OriginalMatrix := ALayers.LayerOriginalMatrix[i];
-    {$IFDEF OBJ}h.FixEndian;{$ENDIF}
+   h.FixEndian;
     AStream.WriteBuffer(h, sizeof(h));
     //end of layer header
 
