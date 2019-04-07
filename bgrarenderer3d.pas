@@ -593,7 +593,7 @@ function TBGRARenderer3D.RenderFace(var ADescription: TFaceRenderingDescription;
       begin
         ClearPoint3D_128(pos3D);
         ClearPoint3D_128(normal3D);
-        color := MergeBGRA({$IFDEF BDS}SliceDynArray(Colors{$ELSE}slice(Colors{$ENDIF},NbVertices));
+        color := MergeBGRA({$IFDEF BDS}slice(PHackArrayOfTBGRAPixel(Colors)^{$ELSE}slice(Colors{$ENDIF},NbVertices));
       end;
       for j := 0 to NbVertices-1 do
       begin
@@ -618,10 +618,17 @@ function TBGRARenderer3D.RenderFace(var ADescription: TFaceRenderingDescription;
     begin
       if Texture <> nil then
       begin
+        {$IFDEF BDS}
         BGRAPolygonAliased.PolygonPerspectiveMappingShaderAliased(FRenderSurface,
-            {$IFDEF BDS}SliceDynArray(Projections{$ELSE}slice(Projections{$ENDIF},NbVertices),{$IFDEF BDS}SSESliceDynArray(Positions3D{$ELSE}slice(Positions3D{$ENDIF},NbVertices),{$IFDEF BDS}SSESliceDynArray(Normals3D{$ELSE}slice(Normals3D{$ENDIF},NbVertices),
-            Texture,{$IFDEF BDS}SliceDynArray(TexCoords{$ELSE}slice(TexCoords{$ENDIF},NbVertices),FOptions.TextureInterpolation,
+            slice(PHackArrayOfTPointF(Projections)^,NbVertices),slice(PHackArrayOfTPoint3D_128(Positions3D)^,NbVertices),slice(PHackArrayOfTPoint3D_128(Normals3D)^,NbVertices),
+            Texture,slice(PHackArrayOfTPointF(TexCoords)^,NbVertices),FOptions.TextureInterpolation,
             FShader.ShaderFunction,True, BGRAPixelTransparent,FZBuffer,FShader.Context);
+        {$ELSE}
+        BGRAPolygonAliased.PolygonPerspectiveMappingShaderAliased(FRenderSurface,
+            slice(PHackArrayOfTPointF(Projections)^,NbVertices),slice(Positions3D,NbVertices),slice(Normals3D,NbVertices),
+            Texture,slice(PHackArrayOfTPointF(TexCoords)^,NbVertices),FOptions.TextureInterpolation,
+            FShader.ShaderFunction,True, BGRAPixelTransparent,FZBuffer,FShader.Context);
+        {$ENDIF}
         exit;
       end;
 
@@ -631,9 +638,15 @@ function TBGRARenderer3D.RenderFace(var ADescription: TFaceRenderingDescription;
 
       if SameColor then
       begin
+        {$IFDEF BDS}
         BGRAPolygonAliased.PolygonPerspectiveMappingShaderAliased(FRenderSurface,
-          {$IFDEF BDS}SliceDynArray(Projections{$ELSE}slice(Projections{$ENDIF},NbVertices),{$IFDEF BDS}SSESliceDynArray(Positions3D{$ELSE}slice(Positions3D{$ENDIF},NbVertices),{$IFDEF BDS}SSESliceDynArray(Normals3D{$ELSE}slice(Normals3D{$ENDIF},NbVertices),nil,
-            {$IFDEF BDS}SliceDynArray(TexCoords{$ELSE}slice(TexCoords{$ENDIF},NbVertices),False,FShader.ShaderFunction,True,Colors[0],FZBuffer,FShader.Context);
+          slice(PHackArrayOfTPointF(Projections)^,NbVertices),slice(PHackArrayOfTPoint3D_128(Positions3D)^,NbVertices),slice(PHackArrayOfTPoint3D_128(Normals3D)^,NbVertices),nil,
+            slice(PHackArrayOfTPointF(TexCoords)^,NbVertices),False,FShader.ShaderFunction,True,Colors[0],FZBuffer,FShader.Context);
+        {$ELSE}
+        BGRAPolygonAliased.PolygonPerspectiveMappingShaderAliased(FRenderSurface,
+          slice(Projections,NbVertices),slice(Positions3D,NbVertices),slice(Normals3D,NbVertices),nil,
+            slice(TexCoords,NbVertices),False,FShader.ShaderFunction,True,Colors[0],FZBuffer,FShader.Context);
+        {$ENDIF}
       end else
       if NbVertices = 3 then
       begin
@@ -641,9 +654,16 @@ function TBGRARenderer3D.RenderFace(var ADescription: TFaceRenderingDescription;
         FColorGradientTempBmp.SetPixel(1,0,Colors[1]);
         FColorGradientTempBmp.SetPixel(0,1,Colors[2]);
         FColorGradientTempBmp.SetPixel(1,1,MergeBGRA(Colors[1],Colors[2]));
+        {$IFDEF BDS}
         BGRAPolygonAliased.PolygonPerspectiveMappingShaderAliased(FRenderSurface,
-          {$IFDEF BDS}SliceDynArray(Projections{$ELSE}slice(Projections{$ENDIF},NbVertices),{$IFDEF BDS}SSESliceDynArray(Positions3D{$ELSE}slice(Positions3D{$ENDIF},NbVertices),{$IFDEF BDS}SSESliceDynArray(Normals3D{$ELSE}slice(Normals3D{$ENDIF},NbVertices),FColorGradientTempBmp,
+          slice(PHackArrayOfTPointF(Projections)^,NbVertices),slice(PHackArrayOfTPoint3D_128(Positions3D)^,NbVertices),slice(PHackArrayOfTPoint3D_128(Normals3D)^,NbVertices),FColorGradientTempBmp,
             [PointF(0,0),PointF(1,0),PointF(0,1)],True,FShader.ShaderFunction,True, BGRAPixelTransparent,FZBuffer,FShader.Context);
+        {$ELSE}
+        BGRAPolygonAliased.PolygonPerspectiveMappingShaderAliased(FRenderSurface,
+          slice(Projections,NbVertices),slice(Positions3D,NbVertices),slice(Normals3D,NbVertices),FColorGradientTempBmp,
+            [PointF(0,0),PointF(1,0),PointF(0,1)],True,FShader.ShaderFunction,True, BGRAPixelTransparent,FZBuffer,FShader.Context);
+
+        {$ENDIF}
       end else
       if NbVertices = 4 then
       begin
@@ -651,9 +671,15 @@ function TBGRARenderer3D.RenderFace(var ADescription: TFaceRenderingDescription;
         FColorGradientTempBmp.SetPixel(1,0,Colors[1]);
         FColorGradientTempBmp.SetPixel(1,1,Colors[2]);
         FColorGradientTempBmp.SetPixel(0,1,Colors[3]);
+        {$IFDEF BDS}
         BGRAPolygonAliased.PolygonPerspectiveMappingShaderAliased(FRenderSurface,
-          {$IFDEF BDS}SliceDynArray(Projections{$ELSE}slice(Projections{$ENDIF},NbVertices),{$IFDEF BDS}SSESliceDynArray(Positions3D{$ELSE}slice(Positions3D{$ENDIF},NbVertices),{$IFDEF BDS}SSESliceDynArray(Normals3D{$ELSE}slice(Normals3D{$ENDIF},NbVertices),FColorGradientTempBmp,
+          slice(PHackArrayOfTPointF(Projections)^,NbVertices),slice(PHackArrayOfTPoint3D_128(Positions3D)^,NbVertices),slice(PHackArrayOfTPoint3D_128(Normals3D)^,NbVertices),FColorGradientTempBmp,
             [PointF(0,0),PointF(1,0),PointF(1,1),PointF(0,1)],True,FShader.ShaderFunction,True, BGRAPixelTransparent,FZBuffer,FShader.Context);
+         {$ELSE}
+        BGRAPolygonAliased.PolygonPerspectiveMappingShaderAliased(FRenderSurface,
+          slice(Projections,NbVertices),slice(Positions3D,NbVertices),slice(Normals3D,NbVertices),FColorGradientTempBmp,
+            [PointF(0,0),PointF(1,0),PointF(1,1),PointF(0,1)],True,FShader.ShaderFunction,True, BGRAPixelTransparent,FZBuffer,FShader.Context);
+         {$ENDIF}
       end else
       if NbVertices >= 3 then
       begin //split into triangles
@@ -724,7 +750,11 @@ function TBGRARenderer3D.RenderFace(var ADescription: TFaceRenderingDescription;
         ComputeShadedColors;
 
         if FSameShadedColors then
-          FMultishapeFiller.AddPolygon({$IFDEF BDS}SliceDynArray(Projections{$ELSE}slice(Projections{$ENDIF},NbVertices),FShadedColors[0])
+        {$IFDEF BDS}
+          FMultishapeFiller.AddPolygon(slice(PHackArrayOfTPointF(Projections)^,NbVertices),FShadedColors[0])
+        {$ELSE}
+          FMultishapeFiller.AddPolygon(slice(Projections,NbVertices),FShadedColors[0])
+        {$ENDIF}
         else
         if NbVertices=3 then
           FMultishapeFiller.AddTriangleLinearColor(
@@ -759,10 +789,19 @@ function TBGRARenderer3D.RenderFace(var ADescription: TFaceRenderingDescription;
       if FSameShadedColors then
       begin
         if FOptions.PerspectiveMode = pmZBuffer then
-          BGRAPolygonAliased.PolygonPerspectiveColorGradientAliased(FRenderSurface, {$IFDEF BDS}SliceDynArray(Projections{$ELSE}slice(Projections{$ENDIF},NbVertices),
-          {$IFDEF BDS}SliceDynArray(FDepths{$ELSE}slice(FDepths{$ENDIF},NbVertices), {$IFDEF BDS}SliceDynArray(FShadedColors{$ELSE}slice(FShadedColors{$ENDIF},NbVertices),True,FZBuffer)
+        {$IFDEF BDS}
+          BGRAPolygonAliased.PolygonPerspectiveColorGradientAliased(FRenderSurface, slice(PHackArrayOfTPointF(Projections)^,NbVertices),
+          slice(PHackArrayOfSingle(FDepths)^,NbVertices), slice(PHackArrayOfTBGRAPixel(FShadedColors)^,NbVertices),True,FZBuffer)
+        {$ELSE}
+          BGRAPolygonAliased.PolygonPerspectiveColorGradientAliased(FRenderSurface, slice(Projections,NbVertices),
+          slice(FDepths,NbVertices),slice(FShadedColors,NbVertices),True,FZBuffer)
+        {$ENDIF}
         else
-          FRenderSurface.FillPoly({$IFDEF BDS}SliceDynArray(Projections{$ELSE}slice(Projections{$ENDIF},NbVertices),FShadedColors[0],dmDrawWithTransparency);
+         {$IFDEF BDS}
+           FRenderSurface.FillPoly(slice(PHackArrayOfTPointF(Projections)^,NbVertices),FShadedColors[0],dmDrawWithTransparency);
+         {$ELSE}
+           FRenderSurface.FillPoly(slice(Projections,NbVertices),FShadedColors[0],dmDrawWithTransparency);
+         {$ENDIF}
       end
       else
       begin
@@ -790,10 +829,19 @@ function TBGRARenderer3D.RenderFace(var ADescription: TFaceRenderingDescription;
         end else
         begin
           if FOptions.PerspectiveMode = pmLinearMapping then
-            FRenderSurface.FillPolyLinearColor({$IFDEF BDS}SliceDynArray(Projections{$ELSE}slice(Projections{$ENDIF},NbVertices),{$IFDEF BDS}SliceDynArray(FShadedColors{$ELSE}slice(FShadedColors{$ENDIF},NbVertices))
+           {$IFDEF BDS}
+            FRenderSurface.FillPolyLinearColor(slice(PHackArrayOfTPointF(Projections)^,NbVertices),slice(PHackArrayOfTBGRAPixel(FShadedColors)^,NbVertices))
+           {$ELSE}
+            FRenderSurface.FillPolyLinearColor(slice(Projections,NbVertices),slice(FShadedColors,NbVertices))
+           {$ENDIF}
           else
-            BGRAPolygonAliased.PolygonPerspectiveColorGradientAliased(FRenderSurface, {$IFDEF BDS}SliceDynArray(Projections{$ELSE}slice(Projections{$ENDIF},NbVertices),
-             {$IFDEF BDS}SliceDynArray(FDepths{$ELSE}slice(FDepths{$ENDIF},NbVertices), {$IFDEF BDS}SliceDynArray(FShadedColors{$ELSE}slice(FShadedColors{$ENDIF},NbVertices),True,FZBuffer);
+           {$IFDEF BDS}
+            BGRAPolygonAliased.PolygonPerspectiveColorGradientAliased(FRenderSurface, slice(PHackArrayOfTPointF(Projections)^,NbVertices),
+            slice(PHackArrayOfSingle(FDepths)^,NbVertices), slice(PHackArrayOfTBGRAPixel(FShadedColors)^,NbVertices),True,FZBuffer);
+           {$ELSE}
+            BGRAPolygonAliased.PolygonPerspectiveColorGradientAliased(FRenderSurface, slice(Projections,NbVertices),
+             slice(FDepths,NbVertices), slice(FShadedColors,NbVertices),True,FZBuffer);
+           {$ENDIF}
         end;
       end;
     end;
@@ -825,23 +873,47 @@ function TBGRARenderer3D.RenderFace(var ADescription: TFaceRenderingDescription;
         if noLighting then
         begin
           if FOptions.PerspectiveMode <> pmLinearMapping then
-            FRenderSurface.FillPolyPerspectiveMapping({$IFDEF BDS}SliceDynArray(Projections{$ELSE}slice(Projections{$ENDIF},NbVertices),
-            {$IFDEF BDS}SliceDynArray(FDepths{$ELSE}slice(FDepths{$ENDIF},NbVertices),Texture,{$IFDEF BDS}SliceDynArray(TexCoords{$ELSE}slice(TexCoords{$ENDIF},NbVertices),
+            {$IFDEF BDS}
+            FRenderSurface.FillPolyPerspectiveMapping(slice(PHackArrayOfTPointF(Projections)^,NbVertices),
+            slice(PHackArrayOfSingle(FDepths)^,NbVertices),Texture,slice(PHackArrayOfTPointF(TexCoords)^,NbVertices),
             FOptions.TextureInterpolation, FZBuffer)
+            {$ELSE}
+            FRenderSurface.FillPolyPerspectiveMapping(slice(Projections,NbVertices),
+            slice(FDepths,NbVertices),Texture,slice(TexCoords,NbVertices),
+            FOptions.TextureInterpolation, FZBuffer)
+            {$ENDIF}
           else
-            FRenderSurface.FillPolyLinearMapping({$IFDEF BDS}SliceDynArray(Projections{$ELSE}slice(Projections{$ENDIF},NbVertices),
-            Texture,{$IFDEF BDS}SliceDynArray(TexCoords{$ELSE}slice(TexCoords{$ENDIF},NbVertices),FOptions.TextureInterpolation);
+            {$IFDEF BDS}
+            FRenderSurface.FillPolyLinearMapping(slice(PHackArrayOfTPointF(Projections)^,NbVertices),
+            Texture,slice(PHackArrayOfTPointF(TexCoords)^,NbVertices),FOptions.TextureInterpolation);
+            {$ELSE}
+            FRenderSurface.FillPolyLinearMapping(slice(Projections,NbVertices),
+            Texture,slice(TexCoords,NbVertices),FOptions.TextureInterpolation);
+            {$ENDIF}
         end else
         begin
           if FOptions.PerspectiveMode <> pmLinearMapping then
+            {$IFDEF BDS}
             FRenderSurface.FillPolyPerspectiveMappingLightness(
-              {$IFDEF BDS}SliceDynArray(Projections{$ELSE}slice(Projections{$ENDIF},NbVertices),{$IFDEF BDS}SliceDynArray(FDepths{$ELSE}slice(FDepths{$ENDIF},NbVertices),Texture,
-              {$IFDEF BDS}SliceDynArray(TexCoords{$ELSE}slice(TexCoords{$ENDIF},NbVertices),{$IFDEF BDS}SliceDynArray(FLightings{$ELSE}slice(FLightings{$ENDIF},NbVertices),
+              slice(PHackArrayOfTPointF(Projections)^,NbVertices),slice(PHackArrayOfSingle(FDepths)^,NbVertices),Texture,
+              slice(PHackArrayOfTPointF(TexCoords)^,NbVertices),slice(PHackArrayOfBGRAWord(FLightings)^,NbVertices),
               FOptions.TextureInterpolation, FZBuffer)
+            {$ELSE}
+            FRenderSurface.FillPolyPerspectiveMappingLightness(
+              slice(Projections,NbVertices),slice(FDepths,NbVertices),Texture,
+              slice(TexCoords,NbVertices),slice(FLightings,NbVertices),
+              FOptions.TextureInterpolation, FZBuffer)
+            {$ENDIF}
           else
+            {$IFDEF BDS}
             FRenderSurface.FillPolyLinearMappingLightness(
-              {$IFDEF BDS}SliceDynArray(Projections{$ELSE}slice(Projections{$ENDIF},NbVertices),Texture,{$IFDEF BDS}SliceDynArray(TexCoords{$ELSE}slice(TexCoords{$ENDIF},NbVertices),
-              {$IFDEF BDS}SliceDynArray(FLightings{$ELSE}slice(FLightings{$ENDIF},NbVertices),FOptions.TextureInterpolation);
+              slice(PHackArrayOfTPointF(Projections)^,NbVertices),Texture,slice(PHackArrayOfTPointF(TexCoords)^,NbVertices),
+              slice(PHackArrayOfBGRAWord(FLightings)^,NbVertices),FOptions.TextureInterpolation);
+            {$ELSE}
+            FRenderSurface.FillPolyLinearMappingLightness(
+              slice(Projections,NbVertices),Texture,slice(TexCoords,NbVertices),
+              slice(FLightings,NbVertices),FOptions.TextureInterpolation);
+            {$ENDIF}
         end;
       end
       else

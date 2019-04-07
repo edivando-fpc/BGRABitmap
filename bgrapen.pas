@@ -835,9 +835,9 @@ var
               len: single;
               leftDir: TPointF;
             end;
-  compPts: {$IFDEF BDS}arrayofTPointF{$ELSE}array of TPointF{$ENDIF};
+  compPts: array of TPointF;
   nbCompPts: integer;
-  revCompPts: {$IFDEF BDS}arrayofTPointF{$ELSE}array of TPointF{$ENDIF};
+  revCompPts: array of TPointF;
   nbRevCompPts: integer;
   pts: array of TPointF;
   roundPrecision: integer;
@@ -999,7 +999,13 @@ var
             -borders[high(pts)-1].leftSide.dir, false,true);
     end;
     posstyle := 0;
-    ApplyPenStyle({$IFDEF BDS}SliceDynArray(compPts{$ELSE}slice(compPts{$ENDIF},nbCompPts),{$IFDEF BDS}SliceDynArray(revCompPts{$ELSE}slice(revCompPts{$ENDIF},nbRevCompPts),penstyle,width,posstyle,enveloppe);
+{$IFDEF BDS}
+     /// works ok
+     //     ApplyPenStyle(slice(PHackArrayOfTPointF(@compPts[0])^,nbCompPts),slice(PHackArrayOfTPointF(@revCompPts[0])^,nbRevCompPts),penstyle,width,posstyle,enveloppe);
+     ApplyPenStyle(slice(PHackArrayOfTPointF(compPts)^,nbCompPts),slice(PHackArrayOfTPointF(revCompPts)^,nbRevCompPts),penstyle,width,posstyle,enveloppe);
+{$ELSE}
+     ApplyPenStyle(slice(compPts,nbCompPts),slice(revCompPts,nbRevCompPts),penstyle,width,posstyle,enveloppe);
+{$ENDIF}
     if Result=nil then
     begin
       Result := enveloppe;

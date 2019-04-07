@@ -898,7 +898,7 @@ var
       end;
       PtCenter3D := PtCenter3D *(1/NbVertices);
       Normalize3D_128(NormalCenter3D);
-      ColorCenter := MergeBGRA({$IFDEF BDS}SliceDynArray(Colors{$ELSE}slice(Colors{$ENDIF},NbVertices));
+      ColorCenter := MergeBGRA({$IFDEF BDS}slice(PHackArrayOfTBGRAPixel(Colors)^{$ELSE}slice(Colors{$ENDIF},NbVertices));
     end;
   end;
 
@@ -944,9 +944,17 @@ begin
           Positions3D[i].z := -Positions3D[i].z;
 
         if NbVertices = 3 then
-          tex.DrawTriangle({$IFDEF BDS}SSESliceDynArray(Positions3D{$ELSE}slice(Positions3D{$ENDIF},3),{$IFDEF BDS}SliceDynArray(TexCoords{$ELSE}slice(TexCoords{$ENDIF},3),{$IFDEF BDS}SliceDynArray(FShadedColorsF{$ELSE}slice(FShadedColorsF{$ENDIF},3))
+        {$IFDEF BDS}
+          tex.DrawTriangle(slice(PHackArrayOfTPoint3D_128(Positions3D)^,3),slice(PHackArrayOfTPointF(TexCoords)^,3),slice(PHackArrayOfTColorF(FShadedColorsF)^,3))
+        {$ELSE}
+          tex.DrawTriangle(slice(Positions3D,3),slice(TexCoords,3),slice(FShadedColorsF,3))
+        {$ENDIF}
         else if NbVertices = 4 then
-          tex.DrawQuad({$IFDEF BDS}SSESliceDynArray(Positions3D{$ELSE}slice(Positions3D{$ENDIF},4),{$IFDEF BDS}SliceDynArray(TexCoords{$ELSE}slice(TexCoords{$ENDIF},4),{$IFDEF BDS}SliceDynArray(FShadedColorsF{$ELSE}slice(FShadedColorsF{$ENDIF},4));
+        {$IFDEF BDS}
+          tex.DrawQuad(slice(PHackArrayOfTPoint3D_128(Positions3D)^,4),slice(PHackArrayOfTPointF(TexCoords)^,4),slice(PHackArrayOfTColorF(FShadedColorsF)^,4));
+        {$ELSE}
+          tex.DrawQuad(slice(Positions3D,4),slice(TexCoords,4),slice(FShadedColorsF,4));
+        {$ENDIF}
       end else
       begin
         for i := 0 to NbVertices-1 do
@@ -956,9 +964,17 @@ begin
         end;
 
         if NbVertices = 3 then
-          tex.DrawTriangle({$IFDEF BDS}SSESliceDynArray(Positions3D{$ELSE}slice(Positions3D{$ENDIF},3),{$IFDEF BDS}SSESliceDynArray(Normals3D{$ELSE}slice(Normals3D{$ENDIF},3),{$IFDEF BDS}SliceDynArray(TexCoords{$ELSE}slice(TexCoords{$ENDIF},3))
+        {$IFDEF BDS}
+          tex.DrawTriangle(slice(PHackArrayOfTPoint3D_128(Positions3D)^,3),slice(PHackArrayOfTPoint3D_128(Normals3D)^,3),slice(PHackArrayOfTPointF(TexCoords)^,3))
+        {$ELSE}
+          tex.DrawTriangle(slice(Positions3D,3),slice(Normals3D,3),slice(TexCoords,3))
+        {$ENDIF}
         else if NbVertices = 4 then
-          tex.DrawQuad({$IFDEF BDS}SSESliceDynArray(Positions3D{$ELSE}slice(Positions3D{$ENDIF},4),{$IFDEF BDS}SSESliceDynArray(Normals3D{$ELSE}slice(Normals3D{$ENDIF},4),{$IFDEF BDS}SliceDynArray(TexCoords{$ELSE}slice(TexCoords{$ENDIF},4));
+         {$IFDEF BDS}
+          tex.DrawQuad(slice(PHackArrayOfTPoint3D_128(Positions3D)^,4),slice(PHackArrayOfTPoint3D_128(Normals3D)^,4),slice(PHackArrayOfTPointF(TexCoords)^,4));
+         {$ELSE}
+          tex.DrawQuad(slice(Positions3D,4),slice(Normals3D,4),slice(TexCoords,4));
+         {$ENDIF}
       end;
     end
     else
@@ -977,7 +993,7 @@ begin
         if NbVertices > 4 then
         begin
           ComputeCenter;
-          ColorCenter := FBGRAShader.Apply(PtCenter3D,NormalCenter3D,MergeBGRA({$IFDEF BDS}SliceDynArray(Colors{$ELSE}slice(Colors{$ENDIF},NbVertices)));
+          ColorCenter := FBGRAShader.Apply(PtCenter3D,NormalCenter3D,MergeBGRA({$IFDEF BDS}slice(PHackArrayOfTBGRAPixel(Colors)^{$ELSE}slice(Colors{$ENDIF},NbVertices)));
 
           for i := 0 to NbVertices-1 do
             Positions3D[i].z := -Positions3D[i].z;
@@ -997,9 +1013,17 @@ begin
             Positions3D[i].z := -Positions3D[i].z;
 
           if NbVertices = 3 then
-            FCanvas.FillTrianglesLinearColor({$IFDEF BDS}SSESliceDynArray(Positions3D{$ELSE}slice(Positions3D{$ENDIF},3),{$IFDEF BDS}SliceDynArray(FShadedColors{$ELSE}slice(FShadedColors{$ENDIF},3))
+          {$IFDEF BDS}
+            FCanvas.FillTrianglesLinearColor(slice(PHackArrayOfTPoint3D_128(Positions3D)^,3),slice(PHackArrayOfTBGRAPixel(FShadedColors)^,3))
+          {$ELSE}
+            FCanvas.FillTrianglesLinearColor(slice(Positions3D,3),slice(FShadedColors,3))
+          {$ENDIF}
           else if NbVertices = 4 then
-            FCanvas.FillQuadsLinearColor({$IFDEF BDS}SSESliceDynArray(Positions3D{$ELSE}slice(Positions3D{$ENDIF},4),{$IFDEF BDS}SliceDynArray(FShadedColors{$ELSE}slice(FShadedColors{$ENDIF},4));
+           {$IFDEF BDS}
+            FCanvas.FillQuadsLinearColor(slice(PHackArrayOfTPoint3D_128(Positions3D)^,4),slice(PHackArrayOfTBGRAPixel(FShadedColors)^,4));
+           {$ELSE}
+            FCanvas.FillQuadsLinearColor(slice(Positions3D,4),slice(FShadedColors,4));
+           {$ENDIF}
         end;
       end else
       begin
@@ -1025,9 +1049,17 @@ begin
         end else
         begin
           if NbVertices = 3 then
-            FCanvas.FillTrianglesLinearColor({$IFDEF BDS}SSESliceDynArray(Positions3D{$ELSE}slice(Positions3D{$ENDIF},3),{$IFDEF BDS}SSESliceDynArray(Normals3D{$ELSE}slice(Normals3D{$ENDIF},3),{$IFDEF BDS}SliceDynArray(Colors{$ELSE}slice(Colors{$ENDIF},3))
+          {$IFDEF BDS}
+            FCanvas.FillTrianglesLinearColor(slice(PHackArrayOfTPoint3D_128(Positions3D)^,3),slice(PHackArrayOfTPoint3D_128(Normals3D)^,3),slice(PHackArrayOfTBGRAPixel(Colors)^,3))
+          {$ELSE}
+            FCanvas.FillTrianglesLinearColor(slice(Positions3D,3),slice(Normals3D,3),slice(Colors,3))
+          {$ENDIF}
           else if NbVertices = 4 then
-            FCanvas.FillQuadsLinearColor({$IFDEF BDS}SSESliceDynArray(Positions3D{$ELSE}slice(Positions3D{$ENDIF},4),{$IFDEF BDS}SSESliceDynArray(Normals3D{$ELSE}slice(Normals3D{$ENDIF},4),{$IFDEF BDS}SliceDynArray(Colors{$ELSE}slice(Colors{$ENDIF},4));
+          {$IFDEF BDS}
+            FCanvas.FillQuadsLinearColor(slice(PHackArrayOfTPoint3D_128(Positions3D)^,4),slice(PHackArrayOfTPoint3D_128(Normals3D)^,4),slice(PHackArrayOfTBGRAPixel(Colors)^,4));
+          {$ELSE}
+            FCanvas.FillQuadsLinearColor(slice(Positions3D,4),slice(Normals3D,4),slice(Colors,4));
+          {$ENDIF}
         end;
       end;
     end;

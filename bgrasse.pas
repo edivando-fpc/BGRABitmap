@@ -94,8 +94,6 @@ type
   {$ENDIF}
   function IsPoint3D_128_Zero(const v: TPoint3D_128): boolean; {$ifdef inline}inline;{$endif}
 
-  function SSESliceDynArray(rOpen : array of TPoint3D_128; Count : integer): arrayofTPoint3D_128;
-
 var
   Add3D_Aligned : procedure (var dest: TPoint3D_128; {$IFDEF OBJ}constref{$ELSE}const{$ENDIF} src: TPoint3D_128);
   Normalize3D_128 : procedure (var v: TPoint3D_128);
@@ -131,20 +129,15 @@ type
     {112} dummy: packed array[0..15]of byte;
   end; {128}
 
+{$IFDEF BDS}//#
+  THackArrayOfTPoint3D_128= array[0..MaxInt div SizeOf(TPoint3D_128)-1] of TPoint3D_128;
+  PHackArrayOfTPoint3D_128=^THackArrayOfTPoint3D_128;
+{$ENDIF}
+
+
 const ExtendedLightingContextSize = 128;
 
 implementation
-
-function SSESliceDynArray(rOpen : array of TPoint3D_128; Count : integer): arrayofTPoint3D_128;
-var
-  i : integer;
-  Open : arrayofTPoint3D_128;
-begin
-  SetLength(Open, Length(rOpen));
-  for i := 0 to High(rOpen) do
-    Open[i] := rOpen[i];
-  Result := Copy(Open, 0, Count);
-end;
 
 function ToPoint3D(const point3D_128: TPoint3D_128): TPoint3D;{$ifdef inline}inline;{$endif}overload;
 begin
