@@ -70,7 +70,9 @@ type
 
 implementation
 
-uses BGRACompressableBitmap, BGRAReadPng;
+uses BGRACompressableBitmap, BGRAReadPng
+  {$IFDEF BDS},bgraendian{$ENDIF}
+  ;
 
 { TBGRAReaderLazPaint }
 
@@ -200,9 +202,9 @@ var channelFlags: byte;
     a,index: BGRANativeInt;
     ColorTab: packed array[0..256*3-1] of byte;
 begin
-  w := {$IFNDEF BDS}LEtoN{$ENDIF}(str.ReadDWord);
-  h := {$IFNDEF BDS}LEtoN{$ENDIF}(str.ReadDWord);
-  nameLen := {$IFNDEF BDS}LEtoN{$ENDIF}(str.ReadDWord);
+  w := LEtoN(str.ReadDWord);
+  h := LEtoN(str.ReadDWord);
+  nameLen := LEtoN(str.ReadDWord);
   setlength(ACaption, nameLen);
   {$IFDEF FPC}{$PUSH}{$ENDIF}{$RANGECHECKS OFF}
   str.ReadBuffer(ACaption[1], nameLen);
@@ -219,7 +221,7 @@ begin
     if (channelFlags and LazpaintChannelNoAlpha) = 0 then
       begin
         Getmem(PAlpha, NbPixels);
-        channelStreamSize := {$IFNDEF BDS}LEtoN{$ENDIF}(str.ReadDWord);
+        channelStreamSize := LEtoN(str.ReadDWord);
         nextPosition:= str.Position+channelStreamSize;
         if (channelStreamSize > 0) and (NbPixels > 0) then DecodeLazRLE(Str, PAlpha^, NbPixels);
         Str.Position:= nextPosition;
@@ -245,7 +247,7 @@ begin
           Getmem(PBlue, NbNonTransp);
           fillchar({%H-}ColorTab,sizeof(ColorTab),0);
 
-          channelStreamSize := {$IFNDEF BDS}LEtoN{$ENDIF}(str.ReadDWord);
+          channelStreamSize := LEtoN(str.ReadDWord);
           nextPosition:= str.Position+channelStreamSize;
           DecodeLazRLE(Str, colorTab[0], 256);
           Str.Position:= nextPosition;
@@ -254,7 +256,7 @@ begin
             move(ColorTab[0],colorTab[256], 256)
           else
           begin
-            channelStreamSize := {$IFNDEF BDS}LEtoN{$ENDIF}(str.ReadDWord);
+            channelStreamSize := LEtoN(str.ReadDWord);
             nextPosition:= str.Position+channelStreamSize;
             DecodeLazRLE(Str, colorTab[256], 256);
             Str.Position:= nextPosition;
@@ -265,13 +267,13 @@ begin
             move(ColorTab[256],colorTab[512], 256)
           else
           begin
-            channelStreamSize := {$IFNDEF BDS}LEtoN{$ENDIF}(str.ReadDWord);
+            channelStreamSize := LEtoN(str.ReadDWord);
             nextPosition:= str.Position+channelStreamSize;
             DecodeLazRLE(Str, colorTab[512], 256);
             Str.Position:= nextPosition;
           end;
 
-          channelStreamSize := {$IFNDEF BDS}LEtoN{$ENDIF}(str.ReadDWord);
+          channelStreamSize := LEtoN(str.ReadDWord);
           nextPosition:= str.Position+channelStreamSize;
           DecodeLazRLE(Str, PIndexed^, NbNonTransp);
           Str.Position:= nextPosition;
@@ -289,7 +291,7 @@ begin
       end else
       begin
         Getmem(PRed, NbNonTransp);
-        channelStreamSize := {$IFNDEF BDS}LEtoN{$ENDIF}(str.ReadDWord);
+        channelStreamSize := LEtoN(str.ReadDWord);
         nextPosition:= str.Position+channelStreamSize;
         DecodeLazRLE(Str, PRed^, NbNonTransp);
         Str.Position:= nextPosition;
@@ -297,7 +299,7 @@ begin
         if (channelFlags and LazPaintChannelGreenFromRed) <> 0 then PGreen := PRed else
         begin
           Getmem(PGreen, NbNonTransp);
-          channelStreamSize := {$IFNDEF BDS}LEtoN{$ENDIF}(str.ReadDWord);
+          channelStreamSize := LEtoN(str.ReadDWord);
           nextPosition:= str.Position+channelStreamSize;
           DecodeLazRLE(Str, PGreen^, NbNonTransp);
           Str.Position:= nextPosition;
@@ -307,7 +309,7 @@ begin
         if (channelFlags and LazPaintChannelBlueFromGreen) <> 0 then PBlue := PGreen else
         begin
           Getmem(PBlue, NbNonTransp);
-          channelStreamSize := {$IFNDEF BDS}LEtoN{$ENDIF}(str.ReadDWord);
+          channelStreamSize := LEtoN(str.ReadDWord);
           nextPosition:= str.Position+channelStreamSize;
           DecodeLazRLE(Str, PBlue^, NbNonTransp);
           Str.Position:= nextPosition;

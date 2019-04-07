@@ -140,7 +140,9 @@ Type
 
 implementation
 
-uses math;
+uses math
+{$IFDEF BDS},bgraendian{$ENDIF}
+;
 
 const StartPoints : array[0..7, 0..1] of BGRAWord =
          ((0,0),(0,0),(4,0),(0,4),(2,0),(0,2),(1,0),(0,1));
@@ -180,10 +182,10 @@ begin
   {.$ENDIF}
   if AStream.Read({%H-}ChunkHeader, sizeof(ChunkHeader))<> sizeof(ChunkHeader) then exit;
   if ChunkHeader.CType <> ChunkTypes[ctIHDR] then exit;
-  if {$IFNDEF BDS}BEtoN{$ENDIF}(ChunkHeader.CLength) < headerChunkSize then exit;
+  if BEtoN(ChunkHeader.CLength) < headerChunkSize then exit;
   if AStream.Read({%H-}HeaderChunk, headerChunkSize) <> headerChunkSize then exit;
-  result.width:= {$IFNDEF BDS}BEtoN{$ENDIF}(HeaderChunk.Width);
-  result.height:= {$IFNDEF BDS}BEtoN{$ENDIF}(HeaderChunk.height);
+  result.width:= BEtoN(HeaderChunk.Width);
+  result.height:= BEtoN(HeaderChunk.height);
   case HeaderChunk.ColorType and 3 of
     0,3: {grayscale, palette}
       if HeaderChunk.BitDepth > 8 then

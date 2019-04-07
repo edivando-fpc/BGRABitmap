@@ -82,23 +82,17 @@ procedure SaveToStreamAsAdobeSwatchExchange(APalette: TBGRAPalette; AStream: TSt
   end;
   procedure WriteInt32(AValue: Int32);
   begin
-    {$IFNDEF BDS}AValue := NtoBE(AValue);{$ENDIF}
+    AValue := NtoBE(AValue);
     AStream.WriteBuffer(AValue,sizeof(AValue));
   end;
   procedure WriteInt16(AValue: Int16);
   begin
-    {$IFNDEF BDS}AValue := NtoBE(AValue);{$ENDIF}
+    AValue := NtoBE(AValue);
     AStream.WriteBuffer(AValue,sizeof(AValue));
   end;
   procedure WriteSingle(AValue: Single);
-  {$IFDEF BDS}var _BGRADWord : BGRADWord;{$ENDIF}
   begin
-    {$IFDEF BDS}
-    move(AValue , _BGRADWord, sizeof(single));
-    move(_BGRADWord , AValue, sizeof(BGRADWord));
-    {$ELSE}
-    BGRADWord(AValue) := BEtoN(BGRADWord(AValue));
-    {$ENDIF}
+    AValue := BEtoN(AValue);
     AStream.WriteBuffer(AValue,sizeof(AValue));
   end;
   procedure WriteBlock(ABlockType: Int16; AContentLength: Int32); overload;
@@ -324,14 +318,14 @@ function LoadFromStreamAsAdobeSwatchExchange(APalette: TBGRAPalette; AStream: TS
     {$IFDEF FPC}{$PUSH}{$ENDIF}{$HINTS OFF}
     AStream.Read(result, sizeof(result));
     {$IFDEF FPC}{$POP}{$ENDIF}
-    {$IFNDEF BDS}result := BEtoN(result);{$ENDIF}
+    result := BEtoN(result);
   end;
   function ReadInt32: int32;
   begin
     {$IFDEF FPC}{$PUSH}{$ENDIF}{$HINTS OFF}
     AStream.Read(result, sizeof(result));
     {$IFDEF FPC}{$POP}{$ENDIF}
-    {$IFNDEF BDS}result := BEtoN(result);{$ENDIF}
+    result := BEtoN(result);
   end;
   function ReadStr(ALength: integer): string;
   begin
@@ -340,17 +334,11 @@ function LoadFromStreamAsAdobeSwatchExchange(APalette: TBGRAPalette; AStream: TS
     setlength(result, ALength);
   end;
   function ReadSingle: single;
-  {$IFDEF BDS}var _BGRADWord : BGRADWord;{$ENDIF}
   begin
     {$IFDEF FPC}{$PUSH}{$ENDIF}{$HINTS OFF}
     AStream.Read(Result, sizeof(result));
     {$IFDEF FPC}{$POP}{$ENDIF}
-    {$IFDEF BDS}
-    move(Result , _BGRADWord, sizeof(single));
-    move(_BGRADWord , Result, sizeof(BGRADWord));
-    {$ELSE}
-    BGRADWord(Result) := BEtoN(BGRADWord(Result));
-    {$ENDIF}
+    Result := BEtoN(Result);
   end;
   function DblToByte(AValue: double): byte;
   begin

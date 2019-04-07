@@ -61,7 +61,9 @@ type
 
 implementation
 
-uses BGRABitmapTypes;
+uses BGRABitmapTypes
+  {$IFDEF BDS},bgraendian{$ENDIF}
+  ;
 
 { TBGRAReaderGif }
 
@@ -114,8 +116,8 @@ begin
     {$IFDEF ENDIAN_BIG}
       with FHeader do
         begin
-          ScreenWidth := {$IFNDEF BDS}LEtoN{$ENDIF}(ScreenWidth);
-          ScreenHeight := {$IFNDEF BDS}LEtoN{$ENDIF}(ScreenHeight);
+          ScreenWidth := LEtoN(ScreenWidth);
+          ScreenHeight := LEtoN(ScreenHeight);
         end;
     {$ENDIF}
     // global palette
@@ -135,10 +137,10 @@ begin
     {$IFDEF ENDIAN_BIG}
       with FDescriptor do
         begin
-          Left := {$IFNDEF BDS}LEtoN{$ENDIF}(Left);
-          Top := {$IFNDEF BDS}LEtoN{$ENDIF}(Top);
-          Width := {$IFNDEF BDS}LEtoN{$ENDIF}(Width);
-          Height := {$IFNDEF BDS}LEtoN{$ENDIF}(Height);
+          Left := LEtoN(Left);
+          Top := LEtoN(Top);
+          Width := LEtoN(Width);
+          Height := LEtoN(Height);
         end;
     {$ENDIF}
     // local palette

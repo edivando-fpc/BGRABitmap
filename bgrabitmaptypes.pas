@@ -526,7 +526,9 @@ uses Math, SysUtils, BGRAUTF8, BGRAUnicode,
      {$IFDEF FPC}
      FPWriteTiff, FPWritePCX, FPWriteTGA,
      {$ENDIF}
-     BGRAWritePNG;
+     BGRAWritePNG
+     {$IFDEF BDS},bgraendian{$ENDIF}
+     ;
 
 {$IFDEF BDS}
 function SliceDynArray(rOpen : array of TColorF; Count : integer): arrayofTColorF;
@@ -956,7 +958,7 @@ var
         if AStream.Read(dwords,10*4) = 10*4 then
         begin
           for i := 0 to 6 do
-          {$IFNDEF BDS}dwords[i] := LEtoN(dwords[i]);{$ENDIF}
+            dwords[i] := LEtoN(dwords[i]);
           if (dwords[0] = 0) and (dwords[1] <= maxFileSize) and (dwords[5] <= maxFileSize) and
              (dwords[9] <= maxFileSize) and
             (dwords[6] = 0) then inc(scores[ifLazPaint],2);
@@ -970,7 +972,7 @@ var
         AStream.Position:= streamStartPos+8;
         if AStream.Read(dwords,4) = 4 then
         begin
-          {$IFNDEF BDS}dwords[0] := LEtoN(dwords[0]){$ENDIF};
+          dwords[0] := LEtoN(dwords[0]);
           if (dwords[0] > 0) and (dwords[0] < 65536) then
           begin
             if 12+dwords[0] < expectedFileSize then
@@ -978,7 +980,7 @@ var
               AStream.Position:= streamStartPos+12+dwords[0];
               if AStream.Read(dwords,6*4) = 6*4 then
               begin
-                for i := 0 to 5 do {$IFNDEF BDS}dwords[i] := LEtoN(dwords[i]){$ENDIF};
+                for i := 0 to 5 do dwords[i] := LEtoN(dwords[i]);
                 if (dwords[0] <= w) and (dwords[1] <= h) and
                   (dwords[2] <= w) and (dwords[3] <= h) and
                   (dwords[2] >= dwords[0]) and (dwords[3] >= dwords[1]) and

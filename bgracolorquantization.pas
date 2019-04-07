@@ -262,7 +262,9 @@ const AllColorDimensions = [cdRed,cdGreen,cdBlue,cdAlpha,cdRGB,cdRG,cdGB,cdRB,cd
 
 implementation
 
-uses BGRADithering, FPImage, FPWriteBMP, BGRAWritePNG, math;
+uses BGRADithering, FPImage, FPWriteBMP, BGRAWritePNG, math
+{$IFDEF BDS},bgraendian{$ENDIF}
+;
 
 const MedianMinPercentage = 0.2;
 
@@ -1938,7 +1940,7 @@ var i,j,prev,idx: integer;
   transpIndex: integer;
 begin
   if AAlpha <> acFullChannelInPalette then
-    alphaMask := {$IFNDEF BDS}LEtoN{$ENDIF}($FF000000)
+    alphaMask := LEtoN($FF000000)
   else
     alphaMask := 0;
   FDimensions:= ADimensions;

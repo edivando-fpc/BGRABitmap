@@ -84,6 +84,8 @@ implementation
 
 { TBGRAWriterBmpMioMap }
 
+{$IFDEF BDS} uses bgraendian;{$ENDIF}
+
 function TBGRAWriterBmpMioMap.IndexOfColor(const AColor: TBGRAPixel): BGRANativeInt;
 var searchedColorValue: BGRAWord;
   searchedAlphaValue: Byte;
@@ -355,11 +357,11 @@ begin
   FlushChunk;
 
   header := FHeader;
-  {$IFNDEF BDS}header.format:= NtoLE(header.format);{$ENDIF}
-  {$IFNDEF BDS}header.width:= NtoLE(header.width);{$ENDIF}
-  {$IFNDEF BDS}header.height:= NtoLE(header.height);{$ENDIF}
-  {$IFNDEF BDS}header.nbColors:= NtoLE(header.nbColors);{$ENDIF}
-  {$IFNDEF BDS}header.nbChunks:= NtoLE(header.nbChunks);{$ENDIF}
+  header.format:= NtoLE(header.format);
+  header.width:= NtoLE(header.width);
+  header.height:= NtoLE(header.height);
+  header.nbColors:= NtoLE(header.nbColors);
+  header.nbChunks:= NtoLE(header.nbChunks);
   Str.WriteBuffer(header, sizeof(header));
 end;
 
@@ -371,7 +373,7 @@ var
 begin
   setlength(Colors, FHeader.nbColors);
   for i := 0 to FHeader.nbColors-1 do
-    colors[i] := {$IFNDEF BDS}NtoLE{$ENDIF}(FPalette[i].ColorValue);
+    colors[i] := NtoLE(FPalette[i].ColorValue);
   Str.WriteBuffer(colors[0], length(Colors)*sizeof(BGRAWord));
   if FPaletteAlpha then
   begin

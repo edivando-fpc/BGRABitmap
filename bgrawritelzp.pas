@@ -68,7 +68,9 @@ type
 
 implementation
 
-uses BGRACompressableBitmap;
+uses BGRACompressableBitmap
+  {$IFDEF BDS},bgraendian{$ENDIF}
+  ;
 
 { TBGRAWriterLazPaint }
 
@@ -243,14 +245,14 @@ var
 
   procedure OutputPlane(AIndex: integer);
   begin
-    str.WriteDWord({$IFNDEF BDS}NtoLE{$ENDIF}(BGRADWord(CompressedPlane[AIndex].Size)));
+    str.WriteDWord(NtoLE(BGRADWord(CompressedPlane[AIndex].Size)));
     CompressedPlane[AIndex].Position:= 0;
     str.CopyFrom(CompressedPlane[AIndex],CompressedPlane[AIndex].Size);
   end;
 
   procedure OutputRGB(AIndex: integer);
   begin
-    str.WriteDWord({$IFNDEF BDS}NtoLE{$ENDIF}(BGRADWord(CompressedRGB[AIndex].Size)));
+    str.WriteDWord(NtoLE(BGRADWord(CompressedRGB[AIndex].Size)));
     CompressedRGB[AIndex].Position:= 0;
     str.CopyFrom(CompressedRGB[AIndex],CompressedRGB[AIndex].Size);
   end;
@@ -403,9 +405,9 @@ begin
   if (CompressedRGB[3] <> nil) and (NonRGBSize > RGBSize) then
     PlaneFlags:= PlaneFlags or LazpaintPalettedRGB;
 
-  str.WriteDWord({$IFNDEF BDS}NtoLE{$ENDIF}(BGRADWord(img.width)));
-  str.WriteDWord({$IFNDEF BDS}NtoLE{$ENDIF}(BGRADWord(img.Height)));
-  str.WriteDWord({$IFNDEF BDS}NtoLE{$ENDIF}(BGRADWord(length(ACaption))));
+  str.WriteDWord(NtoLE(BGRADWord(img.width)));
+  str.WriteDWord(NtoLE(BGRADWord(img.Height)));
+  str.WriteDWord(NtoLE(BGRADWord(length(ACaption))));
   if length(ACaption)>0 then str.WriteBuffer(ACaption[1],length(ACaption));
   str.WriteByte(PlaneFlags);
 

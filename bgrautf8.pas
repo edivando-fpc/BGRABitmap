@@ -168,8 +168,11 @@ procedure LEReadVar(Stream: TStream; out AValue);
 
 implementation
 
+uses
+ {$IFDEF BDS}bgraendian;{$ENDIF}
+
 {$IF DEFINED(FPC) AND DEFINED(BGRABITMAP_USE_LCL)}
-uses LazFileUtils, LazUtf8;
+ LazFileUtils, LazUtf8;
 
 procedure LoadStringsFromFileUTF8(List: TStrings; const FileName: string);
 begin
@@ -910,12 +913,12 @@ function LEReadInt64(Stream: TStream): BGRAInt64;
 begin
   Result := 0;
   stream.Read(Result, sizeof(Result));
-  {$IFNDEF BDS}Result := LEtoN(Result);{$ENDIF}
+  Result := LEtoN(Result);
 end;
 
 procedure LEWriteInt64(Stream: TStream; AValue: BGRAInt64);
 begin
-  {$IFNDEF BDS}AValue := NtoLE(AValue);{$ENDIF}
+  AValue := NtoLE(AValue);
   stream.Write(AValue, sizeof(AValue));
 end;
 
@@ -923,12 +926,12 @@ function LEReadLongint(Stream: TStream): BGRALongInt;
 begin
   Result := 0;
   stream.Read(Result, sizeof(Result));
-  {$IFNDEF BDS}Result := LEtoN(Result);{$ENDIF}
+  Result := LEtoN(Result);
 end;
 
 procedure LEWriteLongint(Stream: TStream; AValue: BGRALongInt);
 begin
-  {$IFNDEF BDS}AValue := NtoLE(AValue);{$ENDIF}
+  AValue := NtoLE(AValue);
   stream.Write(AValue, sizeof(AValue));
 end;
 
@@ -949,14 +952,14 @@ var
 begin
   ResultAsDWord := 0;
   stream.Read(ResultAsDWord, sizeof(Result));
-  {$IFNDEF BDS}ResultAsDWord := LEtoN(ResultAsDWord);{$ENDIF}
+  ResultAsDWord := LEtoN(ResultAsDWord);
 end;
 
 procedure LEWriteSingle(Stream: TStream; AValue: single);
 var
   ValueAsDWord : BGRALongWord absolute AValue;
 begin
-  {$IFNDEF BDS}ValueAsDWord := NtoLE(ValueAsDWord);{$ENDIF}
+  ValueAsDWord := NtoLE(ValueAsDWord);
   stream.Write(ValueAsDWord, sizeof(AValue));
 end;
 

@@ -129,7 +129,9 @@ function MakeBitmapFileHeader(AData: TStream): TBitMapFileHeader;
 
 implementation
 
-uses math;
+uses math
+  {$IFDEF BDS},bgraendian{$ENDIF}
+  ;
 
 function MakeBitmapFileHeader(AData: TStream): TBitMapFileHeader;
 var header: PBitMapInfoHeader;
@@ -139,13 +141,13 @@ var header: PBitMapInfoHeader;
 begin
   AData.Position := 0;
 
-  headerSize := {$IFNDEF BDS}LEtoN{$ENDIF}(AData.ReadDWord);
+  headerSize :=LEtoN(AData.ReadDWord);
   if headerSize = sizeof(TOS2BitmapHeader) then //OS2 1.x
   begin
     AData.ReadBuffer({%H-}os2header,sizeof(os2header));
-    if {$IFNDEF BDS}LEtoN{$ENDIF}(os2header.bcBitCount) in [1,2,4,8] then
+    if LEtoN(os2header.bcBitCount) in [1,2,4,8] then
     begin
-      extraSize := 3*(1 shl {$IFNDEF BDS}LEtoN{$ENDIF}(os2header.bcBitCount));
+      extraSize := 3*(1 shl LEtoN(os2header.bcBitCount));
     end else
       extraSize := 0;
     {$IFDEF BDS}
@@ -153,9 +155,9 @@ begin
     {$ELSE}
     result.bfType:= BGRAWord('BM');
     {$ENDIF}
-    result.bfSize := {$IFNDEF BDS}NtoLE{$ENDIF}(integer(sizeof(TBitMapFileHeader) + AData.Size));
+    result.bfSize := NtoLE(integer(sizeof(TBitMapFileHeader) + AData.Size));
     result.bfReserved:= 0;
-    result.bfOffset := {$IFNDEF BDS}NtoLE{$ENDIF}(integer(sizeof(TBitMapFileHeader) + headerSize + extraSize));
+    result.bfOffset := NtoLE(integer(sizeof(TBitMapFileHeader) + headerSize + extraSize));
   end else
   begin
     if (headerSize < 16) or (headerSize > AData.Size) or (headerSize > 1024) then
@@ -163,11 +165,11 @@ begin
     getmem(header, headerSize);
     try
       fillchar(header^, headerSize,0);
-      header^.Size := {$IFNDEF BDS}NtoLE{$ENDIF}(headerSize);
+      header^.Size := NtoLE(headerSize);
       AData.ReadBuffer((PByte(header)+4)^, headerSize-4);
-      if {$IFNDEF BDS}LEtoN{$ENDIF}(header^.Compression) = BI_BITFIELDS then
+      if LEtoN(header^.Compression) = BI_BITFIELDS then
         extraSize := 4*3
-      else if {$IFNDEF BDS}LEtoN{$ENDIF}(header^.BitCount) in [1,2,4,8] then
+      else if LEtoN(header^.BitCount) in [1,2,4,8] then
       begin
         if header^.ClrUsed > 0 then
           extraSize := 4*header^.ClrUsed
@@ -180,9 +182,9 @@ begin
       {$ELSE}
       result.bfType:= BGRAWord('BM');
       {$ENDIF}
-      result.bfSize := {$IFNDEF BDS}NtoLE{$ENDIF}(Integer(sizeof(TBitMapFileHeader) + AData.Size));
+      result.bfSize := NtoLE(Integer(sizeof(TBitMapFileHeader) + AData.Size));
       result.bfReserved:= 0;
-      result.bfOffset := {$IFNDEF BDS}NtoLE{$ENDIF}(Integer(sizeof(TBitMapFileHeader) + headerSize + extraSize));
+      result.bfOffset := NtoLE(Integer(sizeof(TBitMapFileHeader) + headerSize + extraSize));
     finally
       freemem(header);
     end;
@@ -237,15 +239,14 @@ begin
   fillchar({%H-}result, sizeof(result), 0);
   headerPos := AStream.Position;
   if AStream.Read({%H-}headerSize, sizeof(headerSize)) <> sizeof(headerSize) then exit;
-  {$IFNDEF BDS}headerSize := LEtoN(headerSize);{$ENDIF}
-
+  headerSize := LEtoN(headerSize);
   //check presence of file header
   if (headerSize and $ffff) = BMmagic then
   begin
     headerPos := headerPos +sizeof(TBitMapFileHeader);
     AStream.Position := headerPos;
     if AStream.Read(headerSize, sizeof(headerSize)) <> sizeof(headerSize) then exit;
-    {$IFNDEF BDS}headerSize := LEtoN(headerSize);{$ENDIF}
+    headerSize := LEtoN(headerSize);
   end;
 
   AStream.Position := headerPos;
@@ -253,18 +254,18 @@ begin
   if headerSize = sizeof(TOS2BitmapHeader) then //OS2 1.x
   begin
     if AStream.Read({%H-}os2header, sizeof(os2header)) <> sizeof(os2header) then exit;
-    result.width := {$IFNDEF BDS}LEtoN{$ENDIF}(os2header.bcWidth);
-    result.height := {$IFNDEF BDS}LEtoN{$ENDIF}(os2header.bcHeight);
-    result.colorDepth := {$IFNDEF BDS}LEtoN{$ENDIF}(os2header.bcBitCount);
+    result.width := LEtoN(os2header.bcWidth);
+    result.height := LEtoN(os2header.bcHeight);
+    result.colorDepth := LEtoN(os2header.bcBitCount);
     result.alphaDepth := 0;
   end
   else
   if headerSize >= sizeof(minHeader) then
   begin
     if AStream.Read({%H-}minHeader, sizeof(minHeader)) <> sizeof(minHeader) then exit;
-    result.width := {$IFNDEF BDS}LEtoN{$ENDIF}(minHeader.Width);
-    result.height := {$IFNDEF BDS}LEtoN{$ENDIF}(minHeader.Height);
-    totalDepth := {$IFNDEF BDS}LEtoN{$ENDIF}(minHeader.BitCount);
+    result.width := LEtoN(minHeader.Width);
+    result.height := LEtoN(minHeader.Height);
+    totalDepth := LEtoN(minHeader.BitCount);
     if totalDepth > 24 then
     begin
       result.colorDepth:= 24;
@@ -455,17 +456,17 @@ begin
   Progress(psStarting,0,false,EmptyRect,'',shouldContinue);
   if not shouldContinue then exit;
 
-  headerSize := {$IFNDEF BDS}LEtoN{$ENDIF}(Stream.ReadDWord);
+  headerSize := LEtoN(Stream.ReadDWord);
   fillchar({%H-}BFI,SizeOf(BFI),0);
   if headerSize = sizeof(TOS2BitmapHeader) then
   begin
     fillchar({%H-}os2header,SizeOf(os2header),0);
     Stream.Read(os2header.bcWidth,min(SizeOf(os2header),headerSize)-sizeof(BGRADWord));
     BFI.Size := 16;
-    BFI.Width := {$IFNDEF BDS}LEtoN{$ENDIF}(os2header.bcWidth);
-    BFI.Height := {$IFNDEF BDS}LEtoN{$ENDIF}(os2header.bcHeight);
-    BFI.Planes := {$IFNDEF BDS}LEtoN{$ENDIF}(os2header.bcPlanes);
-    BFI.BitCount := {$IFNDEF BDS}LEtoN{$ENDIF}(os2header.bcBitCount);
+    BFI.Width := LEtoN(os2header.bcWidth);
+    BFI.Height :=LEtoN(os2header.bcHeight);
+    BFI.Planes := LEtoN(os2header.bcPlanes);
+    BFI.BitCount := LEtoN(os2header.bcBitCount);
     FPaletteEntrySize:= 3;
   end else
   begin
@@ -927,7 +928,7 @@ begin
       result := false;
       exit;
     end;
-    Hotspot := Point({$IFNDEF BDS}LEtoN{$ENDIF}(PBGRAWord(@BFH.bfReserved)^),{$IFNDEF BDS}LEtoN{$ENDIF}((PBGRAWord(@BFH.bfReserved)+1)^));
+    Hotspot := Point(LEtoN(PBGRAWord(@BFH.bfReserved)^),LEtoN((PBGRAWord(@BFH.bfReserved)+1)^));
     {$IFDEF ENDIAN_BIG}
     SwapBMPFileHeader(BFH);
     {$ENDIF}

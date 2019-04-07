@@ -84,7 +84,9 @@ function DecodeLazRLE(ASource: TStream; var destBuffer; availableOutputSize: BGR
 
 implementation
 
-uses bufstream;
+uses bufstream
+  {$IFDEF BDS},bgraendian{$ENDIF}
+  ;
 
 const //flag to distinguish ranges of opcodes
       simpleRepetitionFlag = $00;    // $01..$3f: normal repetition
@@ -627,14 +629,14 @@ procedure LazPaintImageHeader_SwapEndianIfNeeded(AHeader: TLazPaintImageHeader);
 begin
   with AHeader do
   begin
-    {$IFNDEF BDS}headerSize := LEtoN(headerSize);{$ENDIF}
-    {$IFNDEF BDS}width := LEtoN(width);{$ENDIF}
-    {$IFNDEF BDS}height := LEtoN(height);{$ENDIF}
-    {$IFNDEF BDS}nbLayers := LEtoN(nbLayers);{$ENDIF}
-    {$IFNDEF BDS}height := LEtoN(height);{$ENDIF}
-    {$IFNDEF BDS}previewOffset := LEtoN(previewOffset);{$ENDIF}
-    {$IFNDEF BDS}compressionMode := LEtoN(compressionMode);{$ENDIF}
-    {$IFNDEF BDS}layersOffset := LEtoN(layersOffset);{$ENDIF}
+    headerSize := LEtoN(headerSize);
+    width := LEtoN(width);
+    height := LEtoN(height);
+    nbLayers := LEtoN(nbLayers);
+    height := LEtoN(height);
+    previewOffset := LEtoN(previewOffset);
+    compressionMode := LEtoN(compressionMode);
+    layersOffset := LEtoN(layersOffset);
   end;
 end;
 

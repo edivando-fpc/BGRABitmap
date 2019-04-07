@@ -118,7 +118,9 @@ type
 
 implementation
 
-uses zstream, BGRAUTF8, strutils;
+uses zstream, BGRAUTF8, strutils
+  {$IFDEF BDS},bgraendian{$ENDIF}
+  ;
 
 type
   TDirEntryRecord = packed record
@@ -199,9 +201,9 @@ begin
   for i := 1 to nbEntries do
   begin
     ARootStream.ReadBuffer({%H-}entryRec, sizeof(entryRec));
-    {$IFNDEF BDS}entryRec.Offset:= LEtoN(entryRec.Offset);{$ENDIF}
-    {$IFNDEF BDS}entryRec.Flags:= LEtoN(entryRec.Flags);{$ENDIF}
-    {$IFNDEF BDS}entryRec.FilenameSize:= LEtoN(entryRec.FilenameSize);{$ENDIF}
+    entryRec.Offset:= LEtoN(entryRec.Offset);
+    entryRec.Flags:= LEtoN(entryRec.Flags);
+    entryRec.FilenameSize:= LEtoN(entryRec.FilenameSize);
 
     if (entryRec.Flags and MemDirectoryEntry_FlagSmallEntryPacked) <> 0 then
     begin
@@ -286,7 +288,7 @@ begin
       curEntry.SaveToEmbeddedStream(entryStream, ADataDest, AStartPos, uncompressedSize);
 
       entryRec.Offset:= ADataDest.Position - AStartPos;
-      {$IFNDEF BDS}entryRec.Offset:= NtoLE(entryRec.Offset);{$ENDIF}
+      entryRec.Offset:= NtoLE(entryRec.Offset);
       if curEntry.Extension <> '' then
         filename := curEntry.Name+'.'+curEntry.Extension
       else
@@ -296,16 +298,16 @@ begin
          (Length(filename)<=255) and (entryStream.Size<=255) then
       begin
         entryRec.Flags:= curEntry.Flags or MemDirectoryEntry_FlagSmallEntryPacked;
-        {$IFNDEF BDS}entryRec.Flags:= NtoLE(entryRec.Flags);{$ENDIF}
+        entryRec.Flags:= NtoLE(entryRec.Flags);
         entryRec.FilenameSize:= length(filename) + (entryStream.Size shl 8);
-        {$IFNDEF BDS}entryRec.FilenameSize := NtoLE(entryRec.FilenameSize);{$ENDIF}
+        entryRec.FilenameSize := NtoLE(entryRec.FilenameSize);
         ARootDest.WriteBuffer(entryRec, sizeof(entryRec));
       end else
       begin
         entryRec.Flags:= curEntry.Flags;
-        {$IFNDEF BDS}entryRec.Flags:= NtoLE(entryRec.Flags);{$ENDIF}
+        entryRec.Flags:= NtoLE(entryRec.Flags);
         entryRec.FilenameSize:= length(filename);
-        {$IFNDEF BDS}entryRec.FilenameSize := NtoLE(entryRec.FilenameSize);{$ENDIF}
+        entryRec.FilenameSize := NtoLE(entryRec.FilenameSize);
         ARootDest.WriteBuffer(entryRec, sizeof(entryRec));
         LEWriteInt64(ARootDest, entryStream.Size);
         LEWriteInt64(ARootDest, uncompressedSize);

@@ -74,9 +74,12 @@ function AlphaToMioMap(AValue: Byte): Byte;
 
 implementation
 
+uses
 {$IFDEF FPC}//#
-uses bufstream;
+bufstream
 {$ENDIF}
+{$IFDEF BDS}bgraendian{$ENDIF}
+;
 
 function MioMapToBGRA(AColor: BGRAWord): TBGRAPixel;
 begin
@@ -116,11 +119,11 @@ begin
   fillchar({%H-}header,sizeof(header),0);
   if stream.Read(header, sizeof(header))<> sizeof(header) then exit;
   if header.magic <> MioMapMagicValue then exit;
-  {$IFNDEF BDS}header.format:= LEtoN(header.format);{$ENDIF}
-  {$IFNDEF BDS}header.width:= LEtoN(header.width);{$ENDIF}
-  {$IFNDEF BDS}header.height:= LEtoN(header.height);{$ENDIF}
-  {$IFNDEF BDS}header.nbColors:= LEtoN(header.nbColors);{$ENDIF}
-  {$IFNDEF BDS}header.nbChunks:= LEtoN(header.nbChunks);{$ENDIF}
+  header.format:= LEtoN(header.format);
+  header.width:= LEtoN(header.width);
+  header.height:= LEtoN(header.height);
+  header.nbColors:= LEtoN(header.nbColors);
+  header.nbChunks:= LEtoN(header.nbChunks);
   if header.format > 1 then exit;
   result := true;
 end;
@@ -137,7 +140,7 @@ begin
   nbColorsRead:= Stream.Read({%H-}mioPalette[0], nbColors*2) div 2;
   for i := 0 to nbColorsRead-1 do
   begin
-    colorValue := {$IFNDEF BDS}LEtoN{$ENDIF}(mioPalette[i]);
+    colorValue := LEtoN(mioPalette[i]);
     result[i] := MioMapToBGRA(colorValue);
   end;
   for i := nbColorsRead to nbColors-1 do
