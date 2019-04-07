@@ -1469,8 +1469,8 @@ begin
 
   if FResampleFilter = rfBox then
   begin
-    posXPrecision := posXPrecision +(posXPrecision +(Precision shr 1));
-    posYPrecision := posYPrecision +(posYPrecision +(Precision shr 1));
+    posXPrecision := posXPrecision + (Precision shr 1);
+    posYPrecision := posYPrecision + (Precision shr 1);
     py0 := PByte(FBitmap.ScanLine[0]);
     if FBitmap.LineOrder = riloTopToBottom then
       deltaRow := FBitmap.Width*sizeof(TBGRAPixel) else
