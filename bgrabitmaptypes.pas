@@ -507,15 +507,21 @@ const
 
 {$IFDEF BDS}
 type
-  ArrayofBGRASingle = array of Single;
-  Arrayofword = array of BGRAWord;
+  // help types for calling slice function in Delphi.
+  THackArrayOfTPointF= array[0..MaxInt div SizeOf(TPointF)-1] of TPointF;
+  PHackArrayOfTPointF=^THackArrayOfTPointF;
 
-procedure DynArrayToOpenArray(rOpen : array of TPointF; rDyn : array of TPointF);
-function SliceDynArray(rOpen : array of TPointF; Count : integer): arrayofTPointF; overload;
-function SliceDynArray(rOpen : array of TBGRAPixel; Count : integer): ArrayOfTBGRAPixel; overload;
-function SliceDynArray(rOpen : array of Single; Count : Integer): ArrayofBGRASingle; overload;
-function SliceDynArray(rOpen : array of BGRAWord; Count : Integer): Arrayofword; overload;
-function SliceDynArray(rOpen : array of TColorF; Count : integer): arrayofTColorF; overload;
+  THackArrayOfTBGRAPixel= array[0..MaxInt div SizeOf(TBGRAPixel)-1] of TBGRAPixel;
+  PHackArrayOfTBGRAPixel=^THackArrayOfTBGRAPixel;
+
+  THackArrayOfTColorF= array[0..MaxInt div SizeOf(TColorF)-1] of TColorF;
+  PHackArrayOfTColorF=^THackArrayOfTColorF;
+
+  THackArrayOfSingle= array[0..MaxInt div SizeOf(Single)-1] of Single;
+  PHackArrayOfSingle=^THackArrayOfSingle;
+
+  THackArrayOfBGRAWord= array[0..MaxInt div SizeOf(BGRAWord)-1] of BGRAWord;
+  PHackArrayOfBGRAWord=^THackArrayOfBGRAWord;
 {$ENDIF}
 
 
@@ -527,71 +533,6 @@ uses Math, SysUtils, BGRAUTF8, BGRAUnicode,
      FPWriteTiff, FPWritePCX, FPWriteTGA,
      {$ENDIF}
      BGRAWritePNG;
-
-{$IFDEF BDS}
-function SliceDynArray(rOpen : array of TColorF; Count : integer): arrayofTColorF;
-var
-  i : integer;
-  Open : arrayofTColorF;
-begin
-  SetLength(Open, Length(rOpen));
-  for i := 0 to High(rOpen) do
-    Open[i] := rOpen[i];
-  Result := Copy(Open, 0, Count);
-end;
-
-function SliceDynArray(rOpen : array of TBGRAPixel; Count : integer): ArrayOfTBGRAPixel;
-var
-  i : integer;
-  Open : ArrayOfTBGRAPixel;
-begin
-  SetLength(Open, Length(rOpen));
-  for i := 0 to High(rOpen) do
-    Open[i] := rOpen[i];
-  Result := Copy(Open, 0, Count);
-end;
-
-procedure DynArrayToOpenArray(rOpen : array of TPointF; rDyn : array of TPointF);
-var
-  i : integer;
-begin
-  for i := 0 to High(rDyn) do
-    rOpen[i] := rDyn[i];
-end;
-
-function SliceDynArray(rOpen : array of TPointF; Count : integer): arrayofTPointF;
-var
-  i : integer;
-  Open : arrayofTPointF;
-begin
-  SetLength(Open, Length(rOpen));
-  for i := 0 to High(rOpen) do
-    Open[i] := rOpen[i];
-  Result := Copy(Open, 0, Count);
-end;
-
-function SliceDynArray(rOpen : array of Single; Count : Integer): ArrayofBGRASingle;
-var
-  i : integer;
-  Open : ArrayofBGRASingle;
-begin
-  SetLength(Open, Length(rOpen));
-  for i := 0 to High(rOpen) do
-    Open[i] := rOpen[i];
-  Result := Copy(Open, 0, Count);
-end;
-
-function SliceDynArray(rOpen : array of BGRAWord; Count : Integer): Arrayofword;
-var
-  i : integer;
-  Open : Arrayofword;
-begin
-  SetLength(Open, Length(rOpen));
-  for i := 0 to High(rOpen) do
-    Open[i] := rOpen[i];
-  Result := Copy(Open, 0, Count);
-end;
-{$ENDIF}
 
 {$DEFINE INCLUDE_IMPLEMENTATION}
 {$I geometrytypes.inc}

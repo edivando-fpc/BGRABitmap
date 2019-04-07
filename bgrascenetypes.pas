@@ -592,10 +592,11 @@ type
     Biface: boolean;
 
     NbVertices: Integer;
-    Projections: {$IFDEF BDS}arrayofTPointF{$ELSE}array of TPointF{$ENDIF};
-    Colors: {$IFDEF BDS}arrayofTBGRAPixel{$ELSE}array of TBGRAPixel{$ENDIF};
-    Positions3D, Normals3D: {$IFDEF BDS}arrayofTPoint3D_128{$ELSE}array of TPoint3D_128{$ENDIF};
-    TexCoords: {$IFDEF BDS}arrayofTPointF{$ELSE}array of TPointF{$ENDIF};
+    Projections: array of TPointF;
+    Colors: array of TBGRAPixel;
+    Positions3D, Normals3D: array of TPoint3D_128;
+    TexCoords: array of TPointF;
+
   end;
 
   { TCustomRenderer3D }
@@ -663,23 +664,12 @@ type
   end;
 
 {$IFDEF BDS}//#
-function SliceDynArrayScene(rOpen : array of IBGRAVertex3D; Count : integer): arrayofIBGRAVertex3D;
+  THackArrayOfIBGRAVertex3D= array[0..MaxInt div SizeOf(IBGRAVertex3D)-1] of IBGRAVertex3D;
+  PHackArrayOfIBGRAVertex3D=^THackArrayOfIBGRAVertex3D;
 {$ENDIF}
 
 implementation
 
-{$IFDEF BDS}
-function SliceDynArrayScene(rOpen : array of IBGRAVertex3D; Count : integer): arrayofIBGRAVertex3D;
-var
-  i : integer;
-  Open : arrayofIBGRAVertex3D;
-begin
-  SetLength(Open, Length(rOpen));
-  for i := 0 to High(rOpen) do
-    Open[i] := rOpen[i];
-  Result := Copy(Open, 0, Count);
-end;
-{$ENDIF}
 { TCustomRenderer3D }
 
 function TCustomRenderer3D.GetProjectionDefined: boolean;

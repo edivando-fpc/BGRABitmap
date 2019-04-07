@@ -2140,7 +2140,7 @@ end;
 
 procedure TBGRACanvas2D.openedSpline(const pts: array of TPointF;
   style: TSplineStyle);
-var transf: {$IFDEF BDS}arrayofTPointF{$ELSE}array of TPointF{$ENDIF};
+var transf:{$IFDEF BDS}arrayofTPointF{$ELSE}array of TPointF{$ENDIF};
 begin
   if length(pts)=0 then exit;
   transf := ApplyTransform(pts);
@@ -2155,18 +2155,26 @@ var transf:{$IFDEF BDS}arrayofTPointF{$ELSE}array of TPointF{$ENDIF};
 begin
   if length(pts)=0 then exit;
   transf := ApplyTransform(pts);
-  transf := BGRAPath.ComputeClosedSpline({$IFDEF BDS}SliceDynArray(transf{$ELSE}slice(transf{$ENDIF}, length(transf)-1),style);
+  {$IFDEF BDS}
+    transf := BGRAPath.ComputeClosedSpline(slice(PHackArrayOfTPointF(transf)^, length(transf)-1),style);
+  {$ELSE}
+    transf := BGRAPath.ComputeClosedSpline(slice(transf, length(transf)-1),style);
+  {$ENDIF}
   AddPoints(transf);
   FLastCoord := pts[high(pts)];
 end;
 
 procedure TBGRACanvas2D.spline(const pts: array of TPointF; style: TSplineStyle);
-var transf: {$IFDEF BDS}arrayofTPointF{$ELSE}array of TPointF{$ENDIF};
+var transf:{$IFDEF BDS}arrayofTPointF{$ELSE}array of TPointF{$ENDIF};
 begin
   if length(pts)=0 then exit;
   transf := ApplyTransform(pts);
   if (pts[0] = pts[high(pts)]) and (length(pts) > 1) then
-    transf := BGRAPath.ComputeClosedSpline({$IFDEF BDS}SliceDynArray(transf{$ELSE}slice(transf{$ENDIF}, length(transf)-1),style)
+    {$IFDEF BDS}
+    transf := BGRAPath.ComputeClosedSpline(slice(PHackArrayOfTPointF(transf)^, length(transf)-1),style)
+    {$ELSE}
+    transf := BGRAPath.ComputeClosedSpline(slice(transf, length(transf)-1),style)
+    {$ENDIF}
   else
     transf := BGRAPath.ComputeOpenedSpline(transf,style);
   AddPoints(transf);
@@ -2362,31 +2370,51 @@ end;
 procedure TBGRACanvas2D.fill;
 begin
   if FPathPointCount = 0 then exit;
-    FillPoly({$IFDEF BDS}SliceDynArray(FPathPoints{$ELSE}slice(FPathPoints{$ENDIF},FPathPointCount));
+  {$IFDEF BDS}
+    FillPoly(slice(PHackArrayOfTPointF(FPathPoints)^,FPathPointCount));
+  {$ELSE}
+    FillPoly(slice(FPathPoints,FPathPointCount));
+  {$ENDIF}
 end;
 
 procedure TBGRACanvas2D.stroke;
 begin
   if FPathPointCount = 0 then exit;
-  StrokePoly({$IFDEF BDS}SliceDynArray(FPathPoints{$ELSE}slice(FPathPoints{$ENDIF},FPathPointCount));
+  {$IFDEF BDS}
+  StrokePoly(slice(PHackArrayOfTPointF(FPathPoints)^,FPathPointCount));
+  {$ELSE}
+  StrokePoly(slice(FPathPoints,FPathPointCount));
+  {$ENDIF}
 end;
 
 procedure TBGRACanvas2D.fillOverStroke;
 begin
   if FPathPointCount = 0 then exit;
-  FillStrokePoly({$IFDEF BDS}SliceDynArray(FPathPoints{$ELSE}slice(FPathPoints{$ENDIF},FPathPointCount),true);
+  {$IFDEF BDS}
+  FillStrokePoly(slice(PHackArrayOfTPointF(FPathPoints)^,FPathPointCount),true);
+  {$ELSE}
+  FillStrokePoly(slice(FPathPoints,FPathPointCount),true);
+  {$ENDIF}
 end;
 
 procedure TBGRACanvas2D.strokeOverFill;
 begin
   if FPathPointCount = 0 then exit;
-  FillStrokePoly({$IFDEF BDS}SliceDynArray(FPathPoints{$ELSE}slice(FPathPoints{$ENDIF},FPathPointCount),false);
+  {$IFDEF BDS}
+  FillStrokePoly(slice(PHackArrayOfTPointF(FPathPoints)^,FPathPointCount),false);
+  {$ELSE}
+  FillStrokePoly(slice(FPathPoints,FPathPointCount),false);
+  {$ENDIF}
 end;
 
 procedure TBGRACanvas2D.clearPath;
 begin
   if FPathPointCount = 0 then exit;
-  ClearPoly({$IFDEF BDS}SliceDynArray(FPathPoints{$ELSE}slice(FPathPoints{$ENDIF},FPathPointCount));
+  {$IFDEF BDS}
+  ClearPoly(slice(PHackArrayOfTPointF(FPathPoints)^,FPathPointCount));
+  {$ELSE}
+  ClearPoly(slice(FPathPoints,FPathPointCount));
+  {$ENDIF}
 end;
 
 procedure TBGRACanvas2D.clip;
@@ -2402,9 +2430,17 @@ begin
     currentState.SetClipMask(surface.NewBitmap(width,height,BGRAWhite),True);
   tempBmp := surface.NewBitmap(width,height,BGRABlack);
   if antialiasing then
-    tempBmp.FillPolyAntialias({$IFDEF BDS}SliceDynArray(FPathPoints{$ELSE}slice(FPathPoints{$ENDIF},FPathPointCount),BGRAWhite)
+    {$IFDEF BDS}
+    tempBmp.FillPolyAntialias(slice(PHackArrayOfTPointF(FPathPoints)^,FPathPointCount),BGRAWhite)
+    {$ELSE}
+    tempBmp.FillPolyAntialias(slice(FPathPoints,FPathPointCount),BGRAWhite)
+    {$ENDIF}
   else
-    tempBmp.FillPoly({$IFDEF BDS}SliceDynArray(FPathPoints{$ELSE}slice(FPathPoints{$ENDIF},FPathPointCount),BGRAWhite,dmSet);
+    {$IFDEF BDS}
+    tempBmp.FillPoly(slice(PHackArrayOfTPointF(FPathPoints)^,FPathPointCount),BGRAWhite,dmSet);
+    {$ELSE}
+    tempBmp.FillPoly(slice(FPathPoints,FPathPointCount),BGRAWhite,dmSet);
+    {$ENDIF}
   currentState.clipMaskReadWrite.BlendImage(0,0,tempBmp,boDarken);
   tempBmp.Free;
 end;
@@ -2414,9 +2450,17 @@ begin
   if FPathPointCount = 0 then exit;
   if currentState.clipMaskReadOnly = nil then exit;
   if antialiasing then
-    currentState.clipMaskReadWrite.FillPolyAntialias({$IFDEF BDS}SliceDynArray(FPathPoints{$ELSE}slice(FPathPoints{$ENDIF},FPathPointCount),BGRAWhite)
+    {$IFDEF BDS}
+    currentState.clipMaskReadWrite.FillPolyAntialias(slice(PHackArrayOfTPointF(FPathPoints)^,FPathPointCount),BGRAWhite)
+    {$ELSE}
+    currentState.clipMaskReadWrite.FillPolyAntialias(slice(FPathPoints,FPathPointCount),BGRAWhite)
+    {$ENDIF}
   else
-    currentState.clipMaskReadWrite.FillPoly({$IFDEF BDS}SliceDynArray(FPathPoints{$ELSE}slice(FPathPoints{$ENDIF},FPathPointCount),BGRAWhite,dmSet);
+    {$IFDEF BDS}
+    currentState.clipMaskReadWrite.FillPoly(slice(PHackArrayOfTPointF(FPathPoints)^,FPathPointCount),BGRAWhite,dmSet);
+    {$ELSE}
+    currentState.clipMaskReadWrite.FillPoly(slice(FPathPoints,FPathPointCount),BGRAWhite,dmSet);
+    {$ENDIF}
   if currentState.clipMaskReadOnly.Equals(BGRAWhite) then
     currentState.SetClipMask(nil,true);
 end;

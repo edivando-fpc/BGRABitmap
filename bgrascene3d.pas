@@ -933,7 +933,11 @@ begin
             faceExtra[i] := faceExtra[NbFaceVertices-1-i];
             faceExtra[NbFaceVertices-1-i] := tempN;
           end;
-        face := result.AddFace({$IFDEF BDS}SliceDynArrayScene{$ELSE}slice{$ENDIF}(faceVertices,NbFaceVertices));
+        {$IFDEF BDS}
+        face := result.AddFace(slice(PHackArrayOfIBGRAVertex3D(faceVertices)^,NbFaceVertices));
+        {$ELSE}
+        face := result.AddFace(slice(faceVertices,NbFaceVertices));
+        {$ENDIF}
         for i := 0 to NbFaceVertices-1 do
         begin
           face.SetNormal(i, faceExtra[i].normal);
@@ -1372,7 +1376,7 @@ var
 
        if not FRenderer.HandlesFaceCulling then
        begin
-         if not IsPolyVisible({$IFDEF BDS}SliceDynArray(faceDesc.Projections{$ELSE}slice(faceDesc.Projections{$ENDIF},VCount)) then
+         if not IsPolyVisible({$IFDEF BDS}slice(PHackArrayOfTPointF(faceDesc.Projections)^{$ELSE}slice(faceDesc.Projections{$ENDIF},VCount)) then
          begin
            if not Biface then exit;
            NegNormals := True;
